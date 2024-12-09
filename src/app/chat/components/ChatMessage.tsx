@@ -4,7 +4,7 @@ import Message from "./Message";
 import { getMessagesByChatId } from "../services/generate-content.service";
 
 type ChatMessagesProps = {
-  chatId: number;
+  chatId: string;
 };
 
 const ChatMessages = ({ chatId }: ChatMessagesProps) => {
@@ -26,6 +26,7 @@ const ChatMessages = ({ chatId }: ChatMessagesProps) => {
     const fetchMessages = async () => {
       setLoading(true);
       const response = await getMessagesByChatId(chatId);
+      console.log(response);
 
       if (response.status === "success") {
         setMessages(response.messages);

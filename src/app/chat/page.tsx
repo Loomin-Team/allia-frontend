@@ -37,8 +37,6 @@ const ChatPage = () => {
       />
       <Sidebar
         sidebarVisible={sidebarVisible}
-        setSidebarVisible={setSidebarVisible}
-        handleChatSelect={setActiveChat}
       />
       <div className="flex h-full">
         <div className="flex-grow rounded-lg flex flex-col p-4 md:ml-64">

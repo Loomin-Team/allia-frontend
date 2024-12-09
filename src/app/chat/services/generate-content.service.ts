@@ -37,13 +37,21 @@ export const getMessagesByChatId = async (chatId: number): Promise<
   | { status: "error"; message: string }
 > => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/v1/chat/${chatId}/messages`);
+    const response = await axios.get(`${API_BASE_URL}/api/v1/messages/${chatId}`);
+    console.log(response);
 
-    const messages = response.data.data.map((message: any) => ({
-      text: message.answer || message.prompt,
-      sender: message.answer ? "bot" : "user",
-      name: message.answer ? "Bot" : "User",
-    }));
+    const messages = response.data.messages.flatMap((message: any) => [
+      {
+        text: message.entry,
+        sender: "user",
+        name: "User",
+      },
+      {
+        text: message.answer,
+        sender: "bot",
+        name: "Bot",
+      },
+    ]);
 
     return {
       status: "success",
