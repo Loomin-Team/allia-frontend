@@ -175,8 +175,14 @@ export default function Home() {
           <Generator onGeneratedMessage={handleGeneratedMessage} />
 
           {generatedMessage && (
-            <div className="mt-10">
+            <div className="flex flex-col justify-center gap-8 mt-10">
               <Message message={generatedMessage} />
+              <Button
+                text={"Sign Up to continue the conversation"}
+                style={"PRIMARY"}
+                onClick={onGoToLogin}
+                className="w-1/3 mx-auto"
+              />
             </div>
           )}
         </section>

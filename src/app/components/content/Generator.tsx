@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@/app/components/content/Card";
 import Image from "next/image";
 import SelectInput from "@/app/components/ui/SelectInput";
@@ -20,19 +19,31 @@ const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
   const [selectedTone, setSelectedTone] = useState<string | null>(
     "professional"
   );
+  const [botTyping, setBotTyping] = useState(false);
+  const [typingDots, setTypingDots] = useState("");
 
   const { promptRef, isGenerating, onSubmit } = useGenerateContent();
   const router = useRouter();
   const pathname = usePathname();
 
+  useEffect(() => {
+    if (botTyping) {
+      const interval = setInterval(() => {
+        setTypingDots((prev) => (prev.length < 3 ? prev + "." : ""));
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [botTyping]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setBotTyping(true);
     const result = await onSubmit(e, selectedTone, selectedCard);
 
+    setBotTyping(false);
     if (result.chatId && result.response) {
-      const generatedText = result.response.payload.answer;
       if (onGeneratedMessage !== undefined) {
         onGeneratedMessage({
-          text: generatedText,
+          text: result.response.payload.answer,
           sender: "bot",
           name: "AlliA",
         });
@@ -114,6 +125,23 @@ const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
           </div>
         </span>
       </div>
+
+      {/* Bot Typing Section */}
+      {botTyping && (
+        <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/icons/Logo.svg"
+              alt="Bot Logo"
+              width={30}
+              height={30}
+            />
+            <p className="text-foreground-secondary">
+              AlliA is typing{typingDots}
+            </p>
+          </div>
+        </div>
+      )}
     </form>
   );
 };
