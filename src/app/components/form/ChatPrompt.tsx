@@ -1,19 +1,17 @@
 "use client";
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import CircleButton from "@/app/components/ui/CircleButton";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
 
-interface ChatPromptProps {
-  onSendMessage: (message: string, tone: string, contentType: string) => void;
-}
-
-const ChatPrompt: React.FC<ChatPromptProps> = ({ onSendMessage }) => {
-  const [prompt, setPrompt] = useState<string>("");
+const ChatPrompt: React.FC = () => {
   const [selectedTone, setSelectedTone] = useState<string>("Professional");
   const [selectedContentType, setSelectedContentType] =
     useState<string>("Text");
+
+  const { promptRef, onSubmit, isGenerating } = useGenerateContent();
 
   const tones = [
     { label: "Professional", value: "Professional" },
@@ -30,41 +28,8 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ onSendMessage }) => {
     { label: "Meme", value: "Meme", icon: "/icons/Ghost.svg" },
   ];
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (prompt.trim() === "") {
-      toast.warning("Please enter a prompt before submitting!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
-
-    if (!selectedTone || !selectedContentType) {
-      toast.warning("Please select a tone and content type!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
-
-    onSendMessage(prompt, selectedTone, selectedContentType);
-    setPrompt("");
-  };
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPrompt(event.target.value);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    await onSubmit(event, selectedTone, selectedContentType);
   };
 
   return (
@@ -72,7 +37,6 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ onSendMessage }) => {
       <ToastContainer />
       <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Tone Selector */}
-
         <div className="flex space-x-4">
           <span className="">
             <p className="text-foreground-secondary mb-2">Tone</p>
@@ -91,7 +55,6 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ onSendMessage }) => {
           {/* Content Type Selector */}
           <span className="w-full">
             <p className="text-foreground-secondary mb-2">Content Type</p>
-
             <div className="flex items-center w-full space-x-4">
               {contentTypes.map((type) => (
                 <button
@@ -117,27 +80,30 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ onSendMessage }) => {
         </div>
 
         {/* Prompt Input */}
-        <div className="flex items-center space-x-2">
-          <input
-            className="flex-grow bg-secondary py-2 px-4 border border-input-border rounded-full"
-            type="text"
-            id="prompt"
-            name="prompt"
-            placeholder="Enter your prompt"
-            value={prompt}
-            onChange={handleChange}
-          />
-          <CircleButton
-            type="submit"
-            image={
-              <Image
-                src="/icons/Send.svg"
-                width={20}
-                height={20}
-                alt="Send icon"
-              />
-            }
-          />
+        <div className="flex gap-3 md:gap-6 items-start">
+          <span className="w-full">
+            <textarea
+              ref={promptRef}
+              id="prompt"
+              className="w-full bg-secondary py-2 px-6 border border-input-border rounded-lg min-h-[48px] h-[48px]"
+              placeholder="Enter your prompt here..."
+            />
+          </span>
+
+          <div>
+            <CircleButton
+              type="submit"
+              disabled={isGenerating}
+              image={
+                <Image
+                  src="/icons/Send.svg"
+                  width={20}
+                  height={20}
+                  alt="Send icon"
+                />
+              }
+            />
+          </div>
         </div>
       </form>
     </div>

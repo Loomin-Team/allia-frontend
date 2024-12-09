@@ -32,15 +32,22 @@ export const generateContent = async (
   }
 };
 
-export const fetchChatMessages = async (chatId: string): Promise<
-  | { status: "success"; data: any }
+export const getMessagesByChatId = async (chatId: number): Promise<
+  | { status: "success"; messages: Array<{ text: string; sender: "user" | "bot"; name: string }> }
   | { status: "error"; message: string }
 > => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/v1/chat/${chatId}/messages`);
+
+    const messages = response.data.data.map((message: any) => ({
+      text: message.answer || message.prompt,
+      sender: message.answer ? "bot" : "user",
+      name: message.answer ? "Bot" : "User",
+    }));
+
     return {
       status: "success",
-      data: response.data.data,
+      messages,
     };
   } catch (error: any) {
     return {

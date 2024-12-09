@@ -5,6 +5,7 @@ import Image from "next/image";
 import SelectInput from "@/app/components/ui/SelectInput";
 import CircleButton from "../ui/CircleButton";
 import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
+import { useRouter } from "next/navigation";
 
 const Generator: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
@@ -13,6 +14,17 @@ const Generator: React.FC = () => {
   );
 
   const { promptRef, isGenerating, onSubmit } = useGenerateContent();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const result = await onSubmit(e, selectedTone, selectedCard);
+
+    if (result.chatId) {
+      router.push(`/chat/${result.chatId}`);
+    } else if (result.error) {
+      console.log(result.error);
+    }
+  };
 
   const cards = [
     { title: "Text Content", value: "Text", icon: "/icons/Text.svg" },
@@ -31,10 +43,7 @@ const Generator: React.FC = () => {
   ];
 
   return (
-    <form
-      onSubmit={(e) => onSubmit(e, selectedTone, selectedCard)}
-      className="mx-auto space-y-10 px-4"
-    >
+    <form onSubmit={handleSubmit} className="mx-auto space-y-10 px-4">
       {/* Cards Section */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card, index) => (
@@ -59,7 +68,7 @@ const Generator: React.FC = () => {
           <textarea
             ref={promptRef}
             id="prompt"
-            className="w-full bg-secondary py-2 px-6 border border-input-border rounded-lg h-[42px]"
+            className="w-full bg-secondary py-2 px-6 border border-input-border rounded-lg min-h-[48px] h-[42px]"
             placeholder="Enter your prompt here..."
           />
         </span>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, FormEvent, RefObject } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { areValidHtmlInputRefs } from "@/app/shared/services/ref-validation.service";
 import { generateContent } from "../services/generate-content.service";
@@ -9,13 +8,12 @@ import { generateContent } from "../services/generate-content.service";
 export const useGenerateContent = () => {
   const promptRef = useRef<HTMLTextAreaElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const router = useRouter();
 
   const onSubmit = async (
     e: FormEvent<HTMLFormElement>,
     toneOption: string | null,
     selectedCard: string | null
-  ) => {
+  ): Promise<{ chatId?: string; error?: string }> => {
     e.preventDefault();
 
     if (
@@ -24,17 +22,17 @@ export const useGenerateContent = () => {
       ])
     ) {
       toast.error("Please enter a valid prompt.");
-      return;
+      return { error: "Invalid prompt" };
     }
 
     if (!toneOption) {
       toast.error("Please select a tone.");
-      return;
+      return { error: "No tone selected" };
     }
 
     if (!selectedCard) {
       toast.error("Please select a content type.");
-      return;
+      return { error: "No content type selected" };
     }
 
     const toastId = toast.loading("Generating content...");
@@ -56,8 +54,7 @@ export const useGenerateContent = () => {
           autoClose: 2000,
         });
 
-        const chatId = response.payload.chat_id;
-        router.push(`/chat/${chatId}`);
+        return { chatId: response.payload.chat_id };
       } else {
         throw new Error(response.message);
       }
@@ -68,6 +65,7 @@ export const useGenerateContent = () => {
         isLoading: false,
         autoClose: 2000,
       });
+      return { error: error.message };
     } finally {
       setIsGenerating(false);
     }
