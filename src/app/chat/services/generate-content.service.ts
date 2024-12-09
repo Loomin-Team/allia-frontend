@@ -3,34 +3,35 @@ import axios from "axios";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const generateContent = async (
-  userId: string,
+  userId: number,
   prompt: string,
   tone: string,
-  content: string
+  answerType: string
 ): Promise<
   | { status: "success"; message: string; payload: any }
   | { status: "error"; message: string }
 > => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/v1/chat`, {
+    const response = await axios.post(`${API_BASE_URL}/api/v1/chats`, {
       user_id: userId,
-      prompt,
-      tone,
-      content,
+      entry: prompt,
+      tone: tone, 
+      answer_type: answerType,
     });
 
     return {
       status: "success",
-      message: "Chat response generated successfully.",
-      payload: response.data.data,
+      message: "Chat created successfully.",
+      payload: response.data.chat, 
     };
   } catch (error: any) {
     return {
       status: "error",
-      message: error.response?.data?.detail || "Failed to generate chat response.",
+      message: error.response?.data?.detail || "Failed to create chat.",
     };
   }
 };
+
 
 export const getMessagesByChatId = async (chatId: string): Promise<
   | { status: "success"; messages: Array<{ text: string; sender: "user" | "bot"; name: string }> }

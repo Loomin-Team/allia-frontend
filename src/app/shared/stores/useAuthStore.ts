@@ -5,11 +5,11 @@ import { User } from "../models/User";
 type AuthStore = {
   token?: string;
   user?: User;
-  isHydrated: boolean; // Nuevo estado para indicar la hidratación
+  isHydrated: boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
   isLoggedIn: () => boolean;
-  hydrate: () => void; // Método para marcar la hidratación
+  hydrate: () => void;
 };
 
 export const useAuthStore = create<AuthStore>()(
@@ -17,7 +17,7 @@ export const useAuthStore = create<AuthStore>()(
     (set, get) => ({
       token: undefined,
       user: undefined,
-      isHydrated: false, // Inicialmente no hidratado
+      isHydrated: false,
 
       login: (token: string, user: User) => {
         set(() => ({ token, user }));
@@ -27,13 +27,13 @@ export const useAuthStore = create<AuthStore>()(
 
       isLoggedIn: () => !!get().token,
 
-      hydrate: () => set({ isHydrated: true }), // Define el método hydrate
+      hydrate: () => set({ isHydrated: true }),
     }),
     {
-      name: "user", // Clave para el almacenamiento persistente
+      name: "user",
       onRehydrateStorage: () => (state) => {
         if (state) {
-          state.hydrate(); // Llama al método hydrate al rehidratar
+          state.hydrate();
         }
       },
     }

@@ -9,18 +9,12 @@ import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 import withAuth from "../shared/layouts/withAuth";
 import { useGenerateContent } from "./hooks/useGenerateContent.hook";
 
-type Chat = {
-  id: string;
-  messages: { text: string; sender: "user" | "bot" }[];
-  date: string;
-};
-
 const ChatPage = () => {
-  const { promptRef, isGenerating, onSubmit } = useGenerateContent();
-  const [sidebarVisible, setSidebarVisible] = useState(false);
-
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore((state) => state.token);
+  const userId = Number(user?.id);
+  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const router = useRouter();
 

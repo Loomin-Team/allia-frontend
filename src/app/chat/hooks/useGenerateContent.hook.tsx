@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { areValidHtmlInputRefs } from "@/app/shared/services/ref-validation.service";
 import { generateContent } from "../services/generate-content.service";
 
-export const useGenerateContent = () => {
+export const useGenerateContent = (userId: number) => {
   const promptRef = useRef<HTMLTextAreaElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -40,9 +40,9 @@ export const useGenerateContent = () => {
 
     try {
       const response = await generateContent(
+        userId,
         promptRef.current!.value,
         toneOption,
-        selectedCard,
         selectedCard
       );
 

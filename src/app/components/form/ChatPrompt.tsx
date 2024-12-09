@@ -2,16 +2,18 @@
 import React, { useState, FormEvent } from "react";
 import CircleButton from "@/app/components/ui/CircleButton";
 import Image from "next/image";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
+import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 
 const ChatPrompt: React.FC = () => {
   const [selectedTone, setSelectedTone] = useState<string>("Professional");
   const [selectedContentType, setSelectedContentType] =
     useState<string>("Text");
-
-  const { promptRef, onSubmit, isGenerating } = useGenerateContent();
+  const user = useAuthStore((state) => state.user);
+  const userId = Number(user?.id);
+  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId);
 
   const tones = [
     { label: "Professional", value: "Professional" },
