@@ -8,6 +8,7 @@ import Header from "@/app/components/ui/Header";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 import { Chat } from "@/app/shared/models/Chat";
 import Message from "@/app/components/ui/Message";
+import withAuth from "@/app/shared/layouts/withAuth";
 
 const ChatPage = () => {
   const { user } = useAuthStore();
@@ -81,4 +82,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default withAuth(ChatPage);

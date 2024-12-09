@@ -1,10 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "@/app/components/ui/Sidebar";
 import Header from "@/app/components/ui/Header";
 import Generator from "../components/content/Generator";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";
+import withAuth from "../shared/layouts/withAuth";
 
 type Chat = {
   id: string;
@@ -17,6 +19,15 @@ const ChatPage = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const user = useAuthStore((state) => state.user);
+  const token = useAuthStore((state) => state.token);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+    }
+  }, [token, router]);
 
   const chatHistory = [
     { id: 1, title: "Noticias de Tecnología", date: "2024-12-08" },
@@ -59,4 +70,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default withAuth(ChatPage);
