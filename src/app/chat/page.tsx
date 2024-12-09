@@ -29,21 +29,6 @@ const ChatPage = () => {
     }
   }, [token, router]);
 
-  const chatHistory = [
-    { id: 1, title: "Noticias de Tecnología", date: "2024-12-08" },
-    { id: 2, title: "Últimas Noticias de Salud", date: "2024-12-07" },
-  ];
-
-  const groupedChats = chatHistory.reduce(
-    (acc: { [key: string]: typeof chatHistory }, chat) => {
-      const date = chat.date;
-      if (!acc[date]) acc[date] = [];
-      acc[date].push(chat);
-      return acc;
-    },
-    {}
-  );
-
   return (
     <div className="mx-auto max-w-[1320px] scroll-smooth flex flex-col gap-4 h-screen bg-background px-6 py-4 ">
       <Header

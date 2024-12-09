@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { BiChevronDown, BiMenu, BiX } from "react-icons/bi";
+import { BiMenu, BiX } from "react-icons/bi";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 import { ProfileDropdownMenu } from "./ProfileDropdownMenu";
 
@@ -14,9 +14,6 @@ const Header: React.FC<HeaderProps> = ({
   sidebarVisible,
 }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-
-  const userName = useAuthStore((state) => state.user?.fullname);
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({
   }, [setSidebarVisible]);
 
   const toggleSidebar = () => {
-    if (isSmallScreen) {
+    if (isSmallScreen && setSidebarVisible) {
       setSidebarVisible(!sidebarVisible);
     }
   };

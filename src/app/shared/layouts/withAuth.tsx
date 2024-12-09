@@ -8,12 +8,17 @@ const withAuth = <P extends object>(
   const ProtectedComponent = (props: P) => {
     const router = useRouter();
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const isHydrated = useAuthStore((state) => state.isHydrated);
 
     useEffect(() => {
-      if (!isLoggedIn()) {
+      if (isHydrated && !isLoggedIn()) {
         router.push("/login");
       }
-    }, [isLoggedIn, router]);
+    }, [isHydrated, isLoggedIn, router]);
+
+    if (!isHydrated) {
+      return <div>Loading...</div>;
+    }
 
     if (!isLoggedIn()) {
       return null;

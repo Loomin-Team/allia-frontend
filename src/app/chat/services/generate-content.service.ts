@@ -31,3 +31,21 @@ export const generateContent = async (
     };
   }
 };
+
+export const fetchChatMessages = async (chatId: string): Promise<
+  | { status: "success"; data: any }
+  | { status: "error"; message: string }
+> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/v1/chat/${chatId}/messages`);
+    return {
+      status: "success",
+      data: response.data.data,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      message: error.response?.data?.detail || "Failed to fetch chat messages.",
+    };
+  }
+};
