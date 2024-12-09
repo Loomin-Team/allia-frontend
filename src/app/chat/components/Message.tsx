@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 type MessageProps = {
@@ -6,6 +6,21 @@ type MessageProps = {
 };
 
 const Message = ({ message }: MessageProps) => {
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < message.text.length) {
+        setDisplayedText((prev) => prev + message.text[index]);
+        index++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 15);
+    return () => clearInterval(interval);
+  }, [message.text]);
+
   return (
     <div
       className={`flex w-full ${
@@ -23,7 +38,7 @@ const Message = ({ message }: MessageProps) => {
             </span>
           </div>
           <div className="px-4 flex justify-between w-full py-2 text-white">
-            <div className="w-11/12 break-words">{message.text}</div>
+            <div className="w-11/12 break-words">{displayedText}</div>
             <div className="flex items-end">
               <Image
                 src="/icons/Pencil.svg"
@@ -35,12 +50,12 @@ const Message = ({ message }: MessageProps) => {
           </div>
         </div>
       ) : (
-        <div className="flex justify-between rounded-md w-full p-3 bg-secondary">
+        <div className="flex justify-between rounded-2xl w-full p-6 bg-secondary">
           <div className="flex h-full items-start">
             <Image src="/icons/Logo.svg" alt="Logo" width={20} height={20} />
           </div>
           <div className="ml-4 text-white flex-1 break-words">
-            {message.text}
+            {displayedText}
           </div>
           <div className="flex gap-2 items-end justify-end">
             <Image
