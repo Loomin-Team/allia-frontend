@@ -5,9 +5,17 @@ import Image from "next/image";
 import SelectInput from "@/app/components/ui/SelectInput";
 import CircleButton from "../ui/CircleButton";
 import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-const Generator: React.FC = () => {
+type GeneratorProps = {
+  onGeneratedMessage?: (message: {
+    text: string;
+    sender: "user" | "bot";
+    name: string;
+  }) => void;
+};
+
+const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [selectedTone, setSelectedTone] = useState<string | null>(
     "professional"
@@ -15,12 +23,23 @@ const Generator: React.FC = () => {
 
   const { promptRef, isGenerating, onSubmit } = useGenerateContent();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const result = await onSubmit(e, selectedTone, selectedCard);
 
-    if (result.chatId) {
-      router.push(`/chat/${result.chatId}`);
+    if (result.chatId && result.response) {
+      const generatedText = result.response.payload.answer;
+      if (onGeneratedMessage !== undefined) {
+        onGeneratedMessage({
+          text: generatedText,
+          sender: "bot",
+          name: "AlliA",
+        });
+      }
+      if (pathname !== "/") {
+        router.push(`/chat/${result.chatId}`);
+      }
     } else if (result.error) {
       console.log(result.error);
     }

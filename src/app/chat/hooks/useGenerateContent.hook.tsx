@@ -13,7 +13,7 @@ export const useGenerateContent = () => {
     e: FormEvent<HTMLFormElement>,
     toneOption: string | null,
     selectedCard: string | null
-  ): Promise<{ chatId?: string; error?: string }> => {
+  ): Promise<{ chatId?: string; error?: string; response?: any }> => {
     e.preventDefault();
 
     if (
@@ -46,6 +46,8 @@ export const useGenerateContent = () => {
         selectedCard
       );
 
+      console.log("API response:", response);
+
       if (response.status === "success") {
         toast.update(toastId, {
           type: "success",
@@ -54,7 +56,7 @@ export const useGenerateContent = () => {
           autoClose: 2000,
         });
 
-        return { chatId: response.payload.chat_id };
+        return { chatId: response.payload.chat_id, response };
       } else {
         throw new Error(response.message);
       }
