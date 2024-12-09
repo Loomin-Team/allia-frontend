@@ -7,6 +7,7 @@ import Header from "@/app/components/ui/Header";
 import Generator from "../components/content/Generator";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 import withAuth from "../shared/layouts/withAuth";
+import { useGenerateContent } from "./hooks/useGenerateContent.hook";
 
 type Chat = {
   id: string;
@@ -15,7 +16,7 @@ type Chat = {
 };
 
 const ChatPage = () => {
-  const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const { promptRef, isGenerating, onSubmit } = useGenerateContent();
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const user = useAuthStore((state) => state.user);
@@ -35,9 +36,7 @@ const ChatPage = () => {
         setSidebarVisible={setSidebarVisible}
         sidebarVisible={sidebarVisible}
       />
-      <Sidebar
-        sidebarVisible={sidebarVisible}
-      />
+      <Sidebar sidebarVisible={sidebarVisible} />
       <div className="flex h-full">
         <div className="flex-grow rounded-lg flex flex-col p-4 md:ml-64">
           <h1>Hi there, {user?.fullname ? user.fullname : "Guest"}!</h1>
@@ -45,7 +44,11 @@ const ChatPage = () => {
             Let’s transform today’s top stories into engaging content.
           </p>
           <div className="mt-6">
-            <Generator />
+            <Generator
+              onSubmit={onSubmit}
+              promptRef={promptRef}
+              isGenerating={isGenerating}
+            />
           </div>
         </div>
       </div>

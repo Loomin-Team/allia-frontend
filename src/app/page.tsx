@@ -10,8 +10,10 @@ import PricingCard from "@/app/components/ui/PricingCard";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Message from "./chat/components/Message";
+import { useDemoChat } from "./chat/hooks/useDemoChat.hook";
 
 export default function Home() {
+  const { promptRef, isGenerating, onSubmitDemoChat } = useDemoChat();
   const [generatedMessage, setGeneratedMessage] = useState<{
     text: string;
     sender: "user" | "bot";
@@ -36,7 +38,6 @@ export default function Home() {
     router.push("/login");
   };
 
-  // Feature data
   const features = [
     {
       title: "AI-Powered Generation",
@@ -171,7 +172,12 @@ export default function Home() {
           >
             Try our AI-powered content generator now
           </p>
-          <Generator onGeneratedMessage={handleGeneratedMessage} />
+          <Generator
+            onSubmit={onSubmitDemoChat}
+            promptRef={promptRef}
+            isGenerating={isGenerating}
+            onGeneratedMessage={handleGeneratedMessage}
+          />
 
           {generatedMessage && (
             <div className="flex flex-col justify-center gap-8 mt-10">

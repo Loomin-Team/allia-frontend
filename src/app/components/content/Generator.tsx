@@ -3,10 +3,15 @@ import Card from "@/app/components/content/Card";
 import Image from "next/image";
 import SelectInput from "@/app/components/ui/SelectInput";
 import CircleButton from "../ui/CircleButton";
-import { usePathname, useRouter } from "next/navigation";
-import { useDemoChat } from "@/app/chat/hooks/useDemoChat.hook";
 
 type GeneratorProps = {
+  onSubmit: (
+    e: React.FormEvent<HTMLFormElement>,
+    toneOption: string | null,
+    contentType: string | null
+  ) => Promise<{ chatId?: string; error?: string; response?: any }>;
+  promptRef: React.RefObject<HTMLTextAreaElement | null>;
+  isGenerating: boolean;
   onGeneratedMessage?: (message: {
     text: string;
     sender: "user" | "bot";
@@ -14,17 +19,18 @@ type GeneratorProps = {
   }) => void;
 };
 
-const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
+const Generator: React.FC<GeneratorProps> = ({
+  onSubmit,
+  promptRef,
+  isGenerating,
+  onGeneratedMessage,
+}) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [selectedTone, setSelectedTone] = useState<string | null>(
     "Professional"
   );
   const [botTyping, setBotTyping] = useState(false);
   const [typingDots, setTypingDots] = useState("");
-
-  const { promptRef, isGenerating, onSubmitDemoChat } = useDemoChat();
-  const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
     if (botTyping) {
@@ -37,22 +43,19 @@ const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setBotTyping(true);
-    const result = await onSubmitDemoChat(e, selectedTone, selectedCard);
+    const result = await onSubmit(e, selectedTone, selectedCard);
 
     setBotTyping(false);
     if (result.chatId && result.response) {
-      if (onGeneratedMessage !== undefined) {
+      if (onGeneratedMessage) {
         onGeneratedMessage({
           text: result.response.payload.answer,
           sender: "bot",
           name: "AlliA",
         });
       }
-      if (pathname !== "/") {
-        router.push(`/chat/${result.chatId}`);
-      }
     } else if (result.error) {
-      console.log(result.error);
+      console.error(result.error);
     }
   };
 
