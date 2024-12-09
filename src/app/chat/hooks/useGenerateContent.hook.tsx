@@ -4,10 +4,13 @@ import { useRef, useState, FormEvent, RefObject } from "react";
 import { toast } from "react-toastify";
 import { areValidHtmlInputRefs } from "@/app/shared/services/ref-validation.service";
 import { generateContent } from "../services/generate-content.service";
+import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 
 export const useGenerateContent = () => {
   const promptRef = useRef<HTMLTextAreaElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const user = useAuthStore((state) => state.user);
 
   const onSubmit = async (
     e: FormEvent<HTMLFormElement>,
@@ -35,11 +38,12 @@ export const useGenerateContent = () => {
       return;
     }
 
-    const toastId = toast.loading("Generating content...");
+    const toastId = toast.loading("Generating chat response...");
     setIsGenerating(true);
 
     try {
       const response = await generateContent(
+        user?.id || "guest",
         promptRef.current!.value,
         toneOption,
         selectedCard
@@ -52,14 +56,14 @@ export const useGenerateContent = () => {
           isLoading: false,
           autoClose: 2000,
         });
-        console.log("Generated Content:", response.payload);
+        console.log("Generated Chat Response:", response.payload);
       } else {
         throw new Error(response.message);
       }
     } catch (error: any) {
       toast.update(toastId, {
         type: "error",
-        render: error.message || "Failed to generate content.",
+        render: error.message || "Failed to generate chat response.",
         isLoading: false,
         autoClose: 2000,
       });

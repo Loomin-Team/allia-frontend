@@ -8,7 +8,9 @@ import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
 
 const Generator: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
-  const [selectedTone, setSelectedTone] = useState<string | null>(null);
+  const [selectedTone, setSelectedTone] = useState<string | null>(
+    "professional"
+  );
 
   const { promptRef, isGenerating, onSubmit } = useGenerateContent();
 
