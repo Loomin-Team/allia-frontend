@@ -32,7 +32,7 @@ export const generateContent = async (
   }
 };
 
-export const getMessagesByChatId = async (chatId: number): Promise<
+export const getMessagesByChatId = async (chatId: string): Promise<
   | { status: "success"; messages: Array<{ text: string; sender: "user" | "bot"; name: string }> }
   | { status: "error"; message: string }
 > => {
@@ -53,6 +53,56 @@ export const getMessagesByChatId = async (chatId: number): Promise<
     return {
       status: "error",
       message: error.response?.data?.detail || "Failed to fetch chat messages.",
+    };
+  }
+};
+
+export const getChatsByUserId = async (userId: number): Promise<
+  | { status: "success"; chats: Array<any> }
+  | { status: "error"; message: string }
+> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/v1/${userId}`);
+
+    return {
+      status: "success",
+      chats: response.data.chats,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      message: error.response?.data?.detail || "Failed to fetch chats.",
+    };
+  }
+};
+
+export const postReply = async (
+  userId: number,
+  entry: string,
+  tone: string,
+  answerType: string,
+  chatId: string
+): Promise<
+  | { status: "success"; reply: any }
+  | { status: "error"; message: string }
+> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/v1/reply`, {
+      user_id: userId,
+      entry,
+      tone,
+      answer_type: answerType,
+      chat_id: chatId,
+    });
+
+    return {
+      status: "success",
+      reply: response.data.reply,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      message: error.response?.data?.detail || "Failed to post reply.",
     };
   }
 };
