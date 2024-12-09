@@ -32,7 +32,7 @@ export const generateContent = async (
   }
 };
 
-export const getMessagesByChatId = async (chatId: string): Promise<
+export const getMessagesByChatId = async (chatId: number): Promise<
   | { status: "success"; messages: Array<{ text: string; sender: "user" | "bot"; name: string }> }
   | { status: "error"; message: string }
 > => {
@@ -103,6 +103,40 @@ export const postReply = async (
     return {
       status: "error",
       message: error.response?.data?.detail || "Failed to post reply.",
+    };
+  }
+};
+
+export const createDemoChat = async (
+  prompt: string,
+  tone: string,
+  content: string
+): Promise<
+  | { status: "success"; message: string; payload: any }
+  | { status: "error"; message: string }
+> => {
+  console.log("Ga", prompt, tone, content);
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/v1/chats/demo`, {
+      entry: prompt,
+      tone,
+      answer_type: content,
+    });
+    
+
+    console.log("Response from /chats/demo:", response.data);
+
+    return {
+      status: "success",
+      message: "Demo chat created successfully.",
+      payload: response.data.chat,
+    };
+  } catch (error: any) {
+    console.error("Error from /chats/demo:", error.response?.data || error);
+
+    return {
+      status: "error",
+      message: error.response?.data?.detail || "Failed to create demo chat.",
     };
   }
 };

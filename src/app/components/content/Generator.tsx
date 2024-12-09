@@ -5,6 +5,7 @@ import SelectInput from "@/app/components/ui/SelectInput";
 import CircleButton from "../ui/CircleButton";
 import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
 import { usePathname, useRouter } from "next/navigation";
+import { useDemoChat } from "@/app/chat/hooks/useDemoChat.hook";
 
 type GeneratorProps = {
   onGeneratedMessage?: (message: {
@@ -17,12 +18,12 @@ type GeneratorProps = {
 const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [selectedTone, setSelectedTone] = useState<string | null>(
-    "professional"
+    "Professional"
   );
   const [botTyping, setBotTyping] = useState(false);
   const [typingDots, setTypingDots] = useState("");
 
-  const { promptRef, isGenerating, onSubmit } = useGenerateContent();
+  const { promptRef, isGenerating, onSubmitDemoChat } = useDemoChat();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -37,7 +38,7 @@ const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setBotTyping(true);
-    const result = await onSubmit(e, selectedTone, selectedCard);
+    const result = await onSubmitDemoChat(e, selectedTone, selectedCard);
 
     setBotTyping(false);
     if (result.chatId && result.response) {
@@ -64,12 +65,12 @@ const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
   ];
 
   const toneOptions = [
-    { value: "professional", label: "Professional" },
-    { value: "casual", label: "Casual" },
-    { value: "formal", label: "Formal" },
-    { value: "friendly", label: "Friendly" },
-    { value: "informative", label: "Informative" },
-    { value: "persuasive", label: "Persuasive" },
+    { value: "Professional", label: "Professional" },
+    { value: "Casual", label: "Casual" },
+    { value: "Formal", label: "Formal" },
+    { value: "Friendly", label: "Friendly" },
+    { value: "Informative", label: "Informative" },
+    { value: "Persuasive", label: "Persuasive" },
   ];
 
   return (
