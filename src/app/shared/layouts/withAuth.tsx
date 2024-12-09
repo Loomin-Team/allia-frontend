@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";
+import FullPageLoader from "@/app/components/ui/FullPageLoader";
 
 const withAuth = <P extends object>(
   WrappedComponent: React.ComponentType<P>
@@ -17,7 +18,11 @@ const withAuth = <P extends object>(
     }, [isHydrated, isLoggedIn, router]);
 
     if (!isHydrated) {
-      return <div>Loading...</div>;
+      return (
+        <div>
+          <FullPageLoader />
+        </div>
+      );
     }
 
     if (!isLoggedIn()) {

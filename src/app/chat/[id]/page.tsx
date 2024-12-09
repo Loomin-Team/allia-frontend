@@ -7,6 +7,7 @@ import Sidebar from "@/app/components/ui/Sidebar";
 import Header from "@/app/components/ui/Header";
 import withAuth from "@/app/shared/layouts/withAuth";
 import ChatMessages from "../components/ChatMessage";
+import FullPageLoader from "@/app/components/ui/FullPageLoader";
 
 const ChatPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -20,7 +21,11 @@ const ChatPage = ({ params }: { params: Promise<{ id: string }> }) => {
   }, [params]);
 
   if (chatId === null) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <FullPageLoader />
+      </div>
+    );
   }
 
   return (
