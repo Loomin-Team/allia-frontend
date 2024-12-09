@@ -21,7 +21,7 @@
   --danger-muted: #3b0d0d;
   --input-border: #484848;
 
-  --generator-max-width: 650px;
+  --generator-max-width: 910px;
 }
 
 html {
@@ -78,16 +78,15 @@ h4 {
   line-height: normal;
 }
 
-
 .sidebar-scroll {
-  overflow-y: scroll;  
+  overflow-y: scroll;
 }
 
 .sidebar-scroll {
-  scrollbar-width: thin;  
-  scrollbar-color: #888 transparent; 
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
 }
 
 .sidebar-scroll:hover {
-  scrollbar-color: #555 transparent;  
+  scrollbar-color: #555 transparent;
 }

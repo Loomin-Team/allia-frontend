@@ -10,7 +10,6 @@ import PricingCard from "@/app/components/ui/PricingCard";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Message from "./chat/components/Message";
-import { text } from "stream/consumers";
 
 export default function Home() {
   const [generatedMessage, setGeneratedMessage] = useState<{

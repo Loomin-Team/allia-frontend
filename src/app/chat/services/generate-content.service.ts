@@ -115,17 +115,12 @@ export const createDemoChat = async (
   | { status: "success"; message: string; payload: any }
   | { status: "error"; message: string }
 > => {
-  console.log("Ga", prompt, tone, content);
   try {
     const response = await axios.post(`${API_BASE_URL}/api/v1/chats/demo`, {
       entry: prompt,
       tone,
       answer_type: content,
     });
-    
-
-    console.log("Response from /chats/demo:", response.data);
-
     return {
       status: "success",
       message: "Demo chat created successfully.",

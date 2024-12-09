@@ -45,8 +45,6 @@ export const useDemoChat = () => {
         contentType
       );
 
-      console.log("Demo Chat API response:", response);
-
       if (response.status === "success") {
         toast.update(toastId, {
           type: "success",

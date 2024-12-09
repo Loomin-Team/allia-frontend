@@ -3,7 +3,6 @@ import Card from "@/app/components/content/Card";
 import Image from "next/image";
 import SelectInput from "@/app/components/ui/SelectInput";
 import CircleButton from "../ui/CircleButton";
-import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
 import { usePathname, useRouter } from "next/navigation";
 import { useDemoChat } from "@/app/chat/hooks/useDemoChat.hook";
 
@@ -59,7 +58,7 @@ const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
 
   const cards = [
     { title: "Text Content", value: "Text", icon: "/icons/Text.svg" },
-    { title: "X Thread", value: "Post", icon: "/icons/X.svg" },
+    { title: "Social Media Post", value: "Post", icon: "/icons/Social.svg" },
     { title: "Short Video", value: "Video", icon: "/icons/Video.svg" },
     { title: "Meme", value: "Meme", icon: "/icons/Ghost.svg" },
   ];
@@ -91,7 +90,7 @@ const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
       </div>
 
       {/* Inputs Section */}
-      <div className="flex flex-col md:flex-row gap-6 items-baseline">
+      <div className="flex flex-col md:flex-row gap-6 items-baseline max-w-generator mx-auto">
         <span className="w-full">
           <label className="text-foreground-secondary" htmlFor="prompt">
             Prompt
