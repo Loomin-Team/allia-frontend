@@ -224,41 +224,58 @@ export default function Home() {
           <h2>Pricing Plans</h2>
           <div
             className={
-              "grid grid-cols-1 lg:grid-cols-[repeat(2,_minmax(0,_max-content))] gap-10 justify-items-center justify-center mt-16 px-4 md:px-0"
+              "grid grid-cols-1 xl:grid-cols-[repeat(3,_minmax(0,_max-content))] gap-5 justify-items-center justify-center mt-16 px-4 md:px-0"
             }
           >
             <PricingCard
-              title={"Free"}
-              type={"Basic"}
+              title={"Free Plan"}
+              type={"$0"}
               description={
                 <p
-                  className={"flex flex-col text-xl text-foreground-secondary"}
+                    className={"flex flex-col text-xl text-foreground-secondary"}
                 >
-                  <span>Text Generation</span>
-                  <span>Meme Generation</span>
-                  <span>Limited Trends Access</span>
+                  <span>Text-only Generation</span>
+                  <span>Basic trends access</span>
+                  <span>5 generations/daily</span>
+                  <span>Community support</span>
                 </p>
               }
               buttonText={"Get Started"}
               buttonAction={() => router.push("/login")}
             />
             <PricingCard
-              title={"Premium"}
-              type={"$9.99/m"}
+              title={"Pro Plan"}
+              type={"$49/m"}
               description={
                 <p
                   className={"flex flex-col text-xl text-foreground-secondary"}
                 >
-                  <span>Text Generation</span>
-                  <span>Meme Generation</span>
-                  <span>X Threads Generation</span>
-                  <span>Video Generation</span>
-                  <span>Full Trends Access</span>
+                  <span>Everything in Free</span>
+                  <span>Image generation</span>
+                  <span>Video generation</span>
+                  <span>10X of Free Plan generations</span>
                   <span>Priority Support</span>
                 </p>
               }
               buttonText={"Upgrade Now"}
               buttonAction={() => onGoToLogin()}
+            />
+            <PricingCard
+                title={"Enterprise"}
+                type={"$299/m"}
+                description={
+                  <p
+                      className={"flex flex-col text-xl text-foreground-secondary"}
+                  >
+                    <span>Custom integrations</span>
+                    <span>Dedicated support</span>
+                    <span>Team collaboration</span>
+                    <span>API access</span>
+                    <span>White labelling</span>
+                  </p>
+                }
+                buttonText={"Upgrade Now"}
+                buttonAction={() => onGoToLogin()}
             />
           </div>
         </section>
