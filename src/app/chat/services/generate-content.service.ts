@@ -32,7 +32,7 @@ export const generateContent = async (
   }
 };
 
-export const getMessagesByChatId = async (chatId: number): Promise<
+export const getMessagesByChatId = async (chatId: string): Promise<
   | { status: "success"; messages: Array<{ text: string; sender: "user" | "bot"; name: string }> }
   | { status: "error"; message: string }
 > => {
