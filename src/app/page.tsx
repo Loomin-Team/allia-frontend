@@ -8,8 +8,24 @@ import TrendingCard from "@/app/components/ui/TrendingCard";
 import Footer from "@/app/components/navigation/Footer";
 import PricingCard from "@/app/components/ui/PricingCard";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Message from "./chat/components/Message";
+import { text } from "stream/consumers";
 
 export default function Home() {
+  const [generatedMessage, setGeneratedMessage] = useState<{
+    text: string;
+    sender: "user" | "bot";
+    name: string;
+  } | null>(null);
+
+  const handleGeneratedMessage = (message: {
+    text: string;
+    sender: "user" | "bot";
+    name: string;
+  }) => {
+    setGeneratedMessage(message);
+  };
   const today = new Date();
   const todayDate = `${
     today.getMonth() + 1
@@ -156,21 +172,19 @@ export default function Home() {
           >
             Try our AI-powered content generator now
           </p>
-          <Generator />
-          {/* TODO: Adjust preview (what functionality will it actually show? */}
-          {/*
-                <div className={"max-w-generator xl:max-w-full mx-auto mt-8 px-4 xl:px-0"}>
-                    <div className={"bg-tertiary p-10 rounded-3xl"}>
-                        <div className={"flex flex-row justify-between mb-14"}>
-                            <p className={"text-xl font-bold"}>Preview</p>
-                            <Button className={"w-44"} text={"Export"} style={"TERTIARY"}/>
-                        </div>
-                        <div className={"bg-tertiary-muted p-10 rounded-3xl xl:h-[540px] px-10"}>
-                            <p>Content preview</p>
-                        </div>
-                    </div>
-                </div>
-*/}
+          <Generator onGeneratedMessage={handleGeneratedMessage} />
+
+          {generatedMessage && (
+            <div className="flex flex-col justify-center gap-8 mt-10">
+              <Message message={generatedMessage} />
+              <Button
+                text={"Sign Up to continue the conversation"}
+                style={"PRIMARY"}
+                onClick={onGoToLogin}
+                className="w-1/3 mx-auto"
+              />
+            </div>
+          )}
         </section>
         {/* Trending */}
         <section className="min-h-screen py-20" id="trends">

@@ -1,26 +1,56 @@
-"use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@/app/components/content/Card";
 import Image from "next/image";
 import SelectInput from "@/app/components/ui/SelectInput";
 import CircleButton from "../ui/CircleButton";
 import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-const Generator: React.FC = () => {
+type GeneratorProps = {
+  onGeneratedMessage?: (message: {
+    text: string;
+    sender: "user" | "bot";
+    name: string;
+  }) => void;
+};
+
+const Generator: React.FC<GeneratorProps> = ({ onGeneratedMessage }) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [selectedTone, setSelectedTone] = useState<string | null>(
     "professional"
   );
+  const [botTyping, setBotTyping] = useState(false);
+  const [typingDots, setTypingDots] = useState("");
 
   const { promptRef, isGenerating, onSubmit } = useGenerateContent();
   const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (botTyping) {
+      const interval = setInterval(() => {
+        setTypingDots((prev) => (prev.length < 3 ? prev + "." : ""));
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [botTyping]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setBotTyping(true);
     const result = await onSubmit(e, selectedTone, selectedCard);
 
-    if (result.chatId) {
-      router.push(`/chat/${result.chatId}`);
+    setBotTyping(false);
+    if (result.chatId && result.response) {
+      if (onGeneratedMessage !== undefined) {
+        onGeneratedMessage({
+          text: result.response.payload.answer,
+          sender: "bot",
+          name: "AlliA",
+        });
+      }
+      if (pathname !== "/") {
+        router.push(`/chat/${result.chatId}`);
+      }
     } else if (result.error) {
       console.log(result.error);
     }
@@ -95,6 +125,23 @@ const Generator: React.FC = () => {
           </div>
         </span>
       </div>
+
+      {/* Bot Typing Section */}
+      {botTyping && (
+        <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/icons/Logo.svg"
+              alt="Bot Logo"
+              width={30}
+              height={30}
+            />
+            <p className="text-foreground-secondary">
+              AlliA is typing{typingDots}
+            </p>
+          </div>
+        </div>
+      )}
     </form>
   );
 };

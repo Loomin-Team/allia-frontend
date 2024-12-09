@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600", "700"],
