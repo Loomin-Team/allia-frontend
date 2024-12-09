@@ -15,10 +15,10 @@ const Generator: React.FC = () => {
   const { promptRef, isGenerating, onSubmit } = useGenerateContent();
 
   const cards = [
-    { title: "Text Content", icon: "/icons/Text.svg" },
-    { title: "X Thread", icon: "/icons/X.svg" },
-    { title: "Short Video", icon: "/icons/Video.svg" },
-    { title: "Meme", icon: "/icons/Ghost.svg" },
+    { title: "Text Content", value: "Text", icon: "/icons/Text.svg" },
+    { title: "X Thread", value: "Post", icon: "/icons/X.svg" },
+    { title: "Short Video", value: "Video", icon: "/icons/Video.svg" },
+    { title: "Meme", value: "Meme", icon: "/icons/Ghost.svg" },
   ];
 
   const toneOptions = [
@@ -44,8 +44,8 @@ const Generator: React.FC = () => {
             icon={
               <Image src={card.icon} alt={card.title} width={45} height={45} />
             }
-            isSelected={selectedCard === card.title}
-            onClick={() => setSelectedCard(card.title)}
+            isSelected={selectedCard === card.value}
+            onClick={() => setSelectedCard(card.value)}
           />
         ))}
       </div>

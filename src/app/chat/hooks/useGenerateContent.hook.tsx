@@ -1,16 +1,15 @@
 "use client";
 
 import { useRef, useState, FormEvent, RefObject } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { areValidHtmlInputRefs } from "@/app/shared/services/ref-validation.service";
 import { generateContent } from "../services/generate-content.service";
-import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 
 export const useGenerateContent = () => {
   const promptRef = useRef<HTMLTextAreaElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-
-  const user = useAuthStore((state) => state.user);
+  const router = useRouter();
 
   const onSubmit = async (
     e: FormEvent<HTMLFormElement>,
@@ -38,14 +37,14 @@ export const useGenerateContent = () => {
       return;
     }
 
-    const toastId = toast.loading("Generating chat response...");
+    const toastId = toast.loading("Generating content...");
     setIsGenerating(true);
 
     try {
       const response = await generateContent(
-        user?.id || "guest",
         promptRef.current!.value,
         toneOption,
+        selectedCard,
         selectedCard
       );
 
@@ -56,14 +55,16 @@ export const useGenerateContent = () => {
           isLoading: false,
           autoClose: 2000,
         });
-        console.log("Generated Chat Response:", response.payload);
+
+        const chatId = response.payload.chat_id;
+        router.push(`/chat/${chatId}`);
       } else {
         throw new Error(response.message);
       }
     } catch (error: any) {
       toast.update(toastId, {
         type: "error",
-        render: error.message || "Failed to generate chat response.",
+        render: error.message || "Failed to generate content.",
         isLoading: false,
         autoClose: 2000,
       });
