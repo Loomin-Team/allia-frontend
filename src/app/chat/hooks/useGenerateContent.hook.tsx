@@ -12,7 +12,8 @@ export const useGenerateContent = (userId: number) => {
   const onSubmit = async (
     e: FormEvent<HTMLFormElement>,
     toneOption: string | null,
-    selectedCard: string | null
+    selectedCard: string | null,
+    onSuccess?: (chatId: string) => void
   ): Promise<{ chatId?: string; error?: string; response?: any }> => {
     e.preventDefault();
 
@@ -55,6 +56,10 @@ export const useGenerateContent = (userId: number) => {
           isLoading: false,
           autoClose: 2000,
         });
+
+        if (onSuccess && response.payload.chat_id) {
+          onSuccess(response.payload.chat_id);
+        }
 
         return { chatId: response.payload.chat_id, response };
       } else {

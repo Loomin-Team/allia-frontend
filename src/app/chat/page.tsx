@@ -24,6 +24,10 @@ const ChatPage = () => {
     }
   }, [token, router]);
 
+  const handleSuccess = (chatId: string) => {
+    router.push(`/chat/${chatId}`);
+  };
+
   return (
     <div className="mx-auto max-w-[1320px] scroll-smooth flex flex-col gap-4 h-screen bg-background px-6 py-4 ">
       <Header
@@ -39,7 +43,9 @@ const ChatPage = () => {
           </p>
           <div className="mt-6">
             <Generator
-              onSubmit={onSubmit}
+              onSubmit={(e, toneOption, selectedCard) =>
+                onSubmit(e, toneOption, selectedCard, handleSuccess)
+              }
               promptRef={promptRef}
               isGenerating={isGenerating}
             />
