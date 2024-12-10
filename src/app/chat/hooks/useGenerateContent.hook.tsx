@@ -59,7 +59,7 @@ export const useGenerateContent = (userId: number, isChatDetail: boolean, chatId
         );
       }
 
-      console.log("API response:", response);
+      console.log("API response po:", response);
 
       if (response.status === "success") {
         toast.update(toastId, {
@@ -78,7 +78,11 @@ export const useGenerateContent = (userId: number, isChatDetail: boolean, chatId
           return { chatId: response.payload.chat_id, response };
         }
 
+        return  {response} ;
+
       } else {
+       
+        
         throw new Error(response.message);
       }
     } catch (error: any) {

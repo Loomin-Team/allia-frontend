@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 
 type MessageProps = {
   message: {
@@ -9,17 +10,20 @@ type MessageProps = {
     name: string;
     answer_type: "Text" | "Post" | "Meme" | "Video";
   };
+  isLastMessage: boolean;
 };
 
-const Message = ({ message }: MessageProps) => {
+const Message = ({ message, isLastMessage }: MessageProps) => {
   const [displayedText, setDisplayedText] = useState(
-    message.sender === "bot" && message.answer_type === "Text"
+    message.sender === "bot" && message.answer_type === "Text" && isLastMessage
       ? ""
       : message.text
   );
 
+  const user = useAuthStore((state) => state.user);
+
   useEffect(() => {
-    if (message.sender === "bot" && message.answer_type === "Text") {
+    if (isLastMessage && message.sender === "bot" && message.answer_type === "Text") {
       let index = 0;
       const interval = setInterval(() => {
         if (index < message.text.length) {
@@ -31,7 +35,7 @@ const Message = ({ message }: MessageProps) => {
       }, 7);
       return () => clearInterval(interval);
     }
-  }, [message.text, message.sender, message.answer_type]);
+  }, [message.text, message.sender, message.answer_type, isLastMessage]);
 
   const renderContent = () => {
     if (message.answer_type === "Meme") {
@@ -69,10 +73,10 @@ const Message = ({ message }: MessageProps) => {
         <div className="flex w-full flex-col">
           <div className="flex mb-2 items-center">
             <div className="w-8 h-8 bg-accent text-white flex items-center justify-center rounded-full">
-              {message.name.charAt(0).toUpperCase()}
+              {user.fullname.charAt(0).toUpperCase()}
             </div>
             <span className="ml-2 text-foreground-secondary">
-              {message.name}
+              {user.fullname}
             </span>
           </div>
           <div className="px-4 flex justify-between w-full py-2 text-white">

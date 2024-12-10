@@ -3,6 +3,8 @@ import Card from "@/app/components/content/Card";
 import Image from "next/image";
 import SelectInput from "@/app/components/ui/SelectInput";
 import CircleButton from "../ui/CircleButton";
+import { toast } from "react-toastify";
+
 
 type GeneratorProps = {
   onSubmit: (
@@ -43,9 +45,10 @@ const Generator: React.FC<GeneratorProps> = ({
   }, [botTyping]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("Selected Card:", selectedCard);
+  
 
     setBotTyping(true);
+
     const result = await onSubmit(e, selectedTone, selectedCard);
 
     setBotTyping(false);
@@ -59,7 +62,7 @@ const Generator: React.FC<GeneratorProps> = ({
         });
       }
     } else if (result.error) {
-      console.error(result.error);
+      toast.error("Please select a content type and enter a valid prompt.");
     }
   };
 
