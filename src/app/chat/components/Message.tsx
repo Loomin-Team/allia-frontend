@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 
 type MessageProps = {
   message: {
@@ -17,6 +18,8 @@ const Message = ({ message }: MessageProps) => {
       ? ""
       : message.text
   );
+
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     if (message.sender === "bot" && message.answer_type === "Text") {
@@ -69,10 +72,10 @@ const Message = ({ message }: MessageProps) => {
         <div className="flex w-full flex-col">
           <div className="flex mb-2 items-center">
             <div className="w-8 h-8 bg-accent text-white flex items-center justify-center rounded-full">
-              {message.name.charAt(0).toUpperCase()}
+              {user.fullname.charAt(0).toUpperCase()}
             </div>
             <span className="ml-2 text-foreground-secondary">
-              {message.name}
+              {user.fullname}
             </span>
           </div>
           <div className="px-4 flex justify-between w-full py-2 text-white">
