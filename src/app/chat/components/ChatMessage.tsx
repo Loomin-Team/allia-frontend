@@ -26,7 +26,7 @@ const ChatMessages = ({ chatId }: ChatMessagesProps) => {
     const fetchMessages = async () => {
       setLoading(true);
       const response = await getMessagesByChatId(chatId);
-      console.log(response);
+     
 
       if (response.status === "success") {
         setMessages(response.messages);

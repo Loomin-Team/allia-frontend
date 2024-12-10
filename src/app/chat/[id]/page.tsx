@@ -12,14 +12,18 @@ import ChatMessages from "../components/ChatMessage";
 const ChatPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
+  const [isChatDetail, setisChatDetail] = useState(true);
+  
 
   const unwrappedParams = use(params);
 
   useEffect(() => {
     if (unwrappedParams.id) {
       setChatId(unwrappedParams.id);
+      setisChatDetail(true);
     }
   }, [unwrappedParams]);
+
 
   if (chatId === null) {
     return (
@@ -28,6 +32,7 @@ const ChatPage = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
     );
   }
+
 
   return (
     <div className="flex flex-col gap-4 h-screen bg-background px-6 py-4">
@@ -42,7 +47,7 @@ const ChatPage = ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="flex-grow p-4 h-80 sidebar-scroll w-full overflow-y-auto space-y-3">
           <ChatMessages chatId={chatId} />
         </div>
-        <ChatPrompt />
+        <ChatPrompt chatId={chatId} isChatDetail={isChatDetail} />
       </div>
     </div>
   );
