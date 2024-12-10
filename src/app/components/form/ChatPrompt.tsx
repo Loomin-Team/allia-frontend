@@ -2,18 +2,26 @@
 import React, { useState, FormEvent } from "react";
 import CircleButton from "@/app/components/ui/CircleButton";
 import Image from "next/image";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";
+import { postReply } from "@/app/chat/services/generate-content.service";
 
-const ChatPrompt: React.FC = () => {
+interface ChatPromptProps {
+  chatId: string;
+  isChatDetail: boolean;
+}
+
+const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
+
   const [selectedTone, setSelectedTone] = useState<string>("Professional");
   const [selectedContentType, setSelectedContentType] =
     useState<string>("Text");
   const user = useAuthStore((state) => state.user);
   const userId = Number(user?.id);
-  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId);
+  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId, isChatDetail, chatId);
+
 
   const tones = [
     { label: "Professional", value: "Professional" },
@@ -31,11 +39,13 @@ const ChatPrompt: React.FC = () => {
   ];
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    
     await onSubmit(event, selectedTone, selectedContentType);
+   
   };
 
   return (
-    <div className="p-4 rounded-lg shadow-md">
+<div className="p-4 rounded-lg shadow-md">
       <ToastContainer />
       <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Tone Selector */}
