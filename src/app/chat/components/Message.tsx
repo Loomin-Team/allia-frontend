@@ -36,13 +36,15 @@ const Message = ({ message }: MessageProps) => {
   const renderContent = () => {
     console.log("Gagaga", message.answer_type);
     if (message.answer_type === "Meme") {
-      <Link href={displayedText} target="_blank" rel="noopener noreferrer">
+      return (
         <Image
           src={displayedText}
           alt={displayedText}
           className="rounded-lg max-w-full"
+          width={500}
+          height={500}
         />
-      </Link>;
+      );
     }
     if (message.answer_type === "Video") {
       return (
