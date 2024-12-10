@@ -13,7 +13,7 @@ const ChatPage = () => {
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore((state) => state.token);
   const userId = Number(user?.id);
-  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId);
+  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId, false, ""); 
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const router = useRouter();

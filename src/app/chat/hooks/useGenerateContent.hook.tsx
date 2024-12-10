@@ -4,8 +4,9 @@ import { useRef, useState, FormEvent, RefObject } from "react";
 import { toast } from "react-toastify";
 import { areValidHtmlInputRefs } from "@/app/shared/services/ref-validation.service";
 import { generateContent } from "../services/generate-content.service";
+import { postReply } from "../services/generate-content.service";
 
-export const useGenerateContent = (userId: number) => {
+export const useGenerateContent = (userId: number, isChatDetail: boolean, chatId: string) => {
   const promptRef = useRef<HTMLTextAreaElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -40,12 +41,23 @@ export const useGenerateContent = (userId: number) => {
     setIsGenerating(true);
 
     try {
-      const response = await generateContent(
-        userId,
-        promptRef.current!.value,
-        toneOption,
-        selectedCard
-      );
+      let response;
+      if (isChatDetail) {
+        response = await postReply(
+          userId,
+          promptRef.current!.value,
+          toneOption,
+          selectedCard,
+          chatId
+        );
+      } else {
+        response = await generateContent(
+          userId,
+          promptRef.current!.value,
+          toneOption,
+          selectedCard
+        );
+      }
 
       console.log("API response:", response);
 
@@ -57,11 +69,15 @@ export const useGenerateContent = (userId: number) => {
           autoClose: 2000,
         });
 
-        if (onSuccess && response.payload.chat_id) {
-          onSuccess(response.payload.chat_id);
+        if (!isChatDetail) {
+
+          if (onSuccess && response.payload.chat_id) {
+            onSuccess(response.payload.chat_id);
+          }
+
+          return { chatId: response.payload.chat_id, response };
         }
 
-        return { chatId: response.payload.chat_id, response };
       } else {
         throw new Error(response.message);
       }
