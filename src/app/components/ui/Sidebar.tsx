@@ -12,7 +12,7 @@ interface SidebarProps {
 interface Chat {
   id: number;
   title: string;
-  createdAt: string;
+  created_at: string;
 }
 
 interface GroupedChats {
@@ -30,7 +30,8 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarVisible }) => {
       getChatsByUserId(userId).then((chats) => {
         if (chats.status === "success") {
           const grouped = chats.chats.reduce((acc, chat) => {
-            const date = new Date(chat.createdAt).toLocaleDateString();
+           
+            const date = new Date(chat.created_at).toDateString();
             if (!acc[date]) acc[date] = [];
             acc[date].push(chat);
             return acc;
