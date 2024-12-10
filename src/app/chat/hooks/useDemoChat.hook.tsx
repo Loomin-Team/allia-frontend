@@ -55,7 +55,7 @@ export const useDemoChat = () => {
 
         return { chatId: response.payload.chat_id, response };
       } else {
-        throw new Error(response.message);
+        console.error(response.message);
       }
     } catch (error: any) {
       toast.update(toastId, {

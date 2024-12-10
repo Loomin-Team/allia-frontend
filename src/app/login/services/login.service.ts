@@ -6,7 +6,7 @@ export const login = async (
   email: string,
   password: string
 ): Promise<
-  | { status: "success"; message: string; payload: { token: string; user: { id: string; fullname: string; email: string } } }
+  | { status: "success"; message: string; payload: { token: string; user: { id: number; fullname: string; email: string } } }
   | { status: "error"; message: string }
 > => {
   try {
