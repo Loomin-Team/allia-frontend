@@ -34,7 +34,6 @@ const Message = ({ message }: MessageProps) => {
   }, [message.text, message.sender, message.answer_type]);
 
   const renderContent = () => {
-    console.log("Gagaga", message.answer_type);
     if (message.answer_type === "Meme") {
       return (
         <Image

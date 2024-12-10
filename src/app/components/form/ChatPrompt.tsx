@@ -34,7 +34,7 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
 
   const contentTypes = [
     { label: "Text", value: "Text", icon: "/icons/Text.svg" },
-    { label: "X Thread", value: "X Thread", icon: "/icons/X.svg" },
+    { label: "X Thread", value: "X Thread", icon: "/icons/Social.svg" },
     { label: "Video", value: "Video", icon: "/icons/Video.svg" },
     { label: "Meme", value: "Meme", icon: "/icons/Ghost.svg" },
   ];

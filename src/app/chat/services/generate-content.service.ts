@@ -48,11 +48,13 @@ export const getMessagesByChatId = async (chatId: string): Promise<
   try {
     const response = await axios.get(`${API_BASE_URL}/api/v1/messages/${chatId}`);
     const messages = response.data.messages.map((message: any) => ({
-      text: message.text,
-      sender: message.sender,
+      text: message.answer,
+      sender: message.sender || "bot",
       name: message.sender === "bot" ? "Bot" : "User",
       answer_type: message.answer_type,
     }));
+    
+    
 
     return {
       status: "success",
