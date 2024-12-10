@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { BiChevronDown, BiMenu } from "react-icons/bi";
 import Button from "@/app/components/ui/Button";
 import Image from "next/image";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";

@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
-import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 import { ProfileDropdownMenu } from "./ProfileDropdownMenu";
+import Image from "next/image";
 
 interface HeaderProps {
   setSidebarVisible: (visible: boolean) => void;
@@ -39,7 +39,12 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <div className="flex justify-between items-center text-white lg:ml-64">
       <div className="flex-shrink-0">
-        <img src="/icons/BrandingLogo.svg" alt="Logo" width={80} height={80} />
+        <Image
+          src="/icons/BrandingLogo.svg"
+          alt="Logo"
+          width={80}
+          height={80}
+        />
       </div>
 
       <div className="flex gap-2 items-center">

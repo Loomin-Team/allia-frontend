@@ -37,7 +37,7 @@ const Message = ({ message }: MessageProps) => {
     console.log("Gagaga", message.answer_type);
     if (message.answer_type === "Meme") {
       <Link href={displayedText} target="_blank" rel="noopener noreferrer">
-        <img
+        <Image
           src={displayedText}
           alt={displayedText}
           className="rounded-lg max-w-full"
