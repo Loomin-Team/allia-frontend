@@ -40,21 +40,30 @@ export const getMessagesByChatId = async (chatId: string): Promise<
         text: string;
         sender: "user" | "bot";
         name: string;
-        answer_type: "Text" | "Meme" | "Video";
+        answer_type: "Text" | "Meme" | "Video" | "Post";
+        
       }>;
     }
   | { status: "error"; message: string }
 > => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/v1/messages/${chatId}`);
-    const messages = response.data.messages.map((message: any) => ({
-      text: message.answer,
-      sender: message.sender || "bot",
-      name: message.sender === "bot" ? "Bot" : "User",
-      answer_type: message.answer_type,
-    }));
-    
-    
+
+    const messages = response.data.messages.flatMap((message: any) => [
+      {
+        text: message.entry,
+        sender: "user",
+        name: "user",
+        answer_type: message.answer_type,
+      },
+      {
+        text: message.answer,
+        sender: "bot",
+        name: "AlliA",
+        answer_type: message.answer_type,
+      },
+    ]);
+
 
     return {
       status: "success",
@@ -107,6 +116,7 @@ export const postReply = async (
       chat_id: chatId,
     });
 
+
     return {
       status: "success",
       reply: response.data.reply,
@@ -134,8 +144,7 @@ export const createDemoChat = async (
       answer_type: content,
     });
 
-    console.log("Backend response (createDemoChat):", response.data);
-
+   
     return {
       status: "success",
       message: "Demo chat created successfully.",

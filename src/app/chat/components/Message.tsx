@@ -10,11 +10,12 @@ type MessageProps = {
     name: string;
     answer_type: "Text" | "Post" | "Meme" | "Video";
   };
+  isLastMessage: boolean;
 };
 
-const Message = ({ message }: MessageProps) => {
+const Message = ({ message, isLastMessage }: MessageProps) => {
   const [displayedText, setDisplayedText] = useState(
-    message.sender === "bot" && message.answer_type === "Text"
+    message.sender === "bot" && message.answer_type === "Text" && isLastMessage
       ? ""
       : message.text
   );
@@ -22,7 +23,7 @@ const Message = ({ message }: MessageProps) => {
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    if (message.sender === "bot" && message.answer_type === "Text") {
+    if (isLastMessage && message.sender === "bot" && message.answer_type === "Text") {
       let index = 0;
       const interval = setInterval(() => {
         if (index < message.text.length) {
@@ -34,7 +35,7 @@ const Message = ({ message }: MessageProps) => {
       }, 7);
       return () => clearInterval(interval);
     }
-  }, [message.text, message.sender, message.answer_type]);
+  }, [message.text, message.sender, message.answer_type, isLastMessage]);
 
   const renderContent = () => {
     if (message.answer_type === "Meme") {

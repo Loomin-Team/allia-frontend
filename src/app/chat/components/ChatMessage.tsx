@@ -1,23 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useEffect,useState, useRef } from "react";
+import Image from "next/image";
 import Message from "./Message";
-import { getMessagesByChatId } from "../services/generate-content.service";
+import { MessageModel } from "@/app/shared/models/MessageModel";
 
 type ChatMessagesProps = {
   chatId: string;
+
+  messages:  Array<MessageModel>;
+
+  isTyping: boolean;
+  error: string | null;
+  loading: boolean;
 };
 
-const ChatMessages = ({ chatId }: ChatMessagesProps) => {
-  const [messages, setMessages] = useState<
-    Array<{
-      text: string;
-      sender: "user" | "bot";
-      name: string;
-      answer_type: "Text" | "Post" | "Meme" | "Video";
-    }>
-  >([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+const ChatMessages = ({ chatId, messages, isTyping, error, loading }: ChatMessagesProps) => {
+  
+  const [typingDots, setTypingDots] = useState("");
+
+
+  useEffect(() => {
+    if (isTyping) {
+      const interval = setInterval(() => {
+        setTypingDots((prev) => (prev.length < 3 ? prev + "." : ""));
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [isTyping]);
+
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -28,24 +37,8 @@ const ChatMessages = ({ chatId }: ChatMessagesProps) => {
   };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      setLoading(true);
-      const response = await getMessagesByChatId(chatId);
-      if (response.status === "success") {
-        setMessages(response.messages);
-      } else {
-        setError(response.message);
-      }
-
-      setLoading(false);
-    };
-
-    fetchMessages();
-  }, [chatId]);
-
-  useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isTyping]);
 
   if (loading) {
     return <div>Loading messages...</div>;
@@ -58,8 +51,16 @@ const ChatMessages = ({ chatId }: ChatMessagesProps) => {
   return (
     <div className="flex flex-col space-y-4">
       {messages.map((message, index) => (
-        <Message key={index} message={message} />
+        <Message key={index} message={message} isLastMessage={index === messages.length - 1} />
       ))}
+      {isTyping && (
+        <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center gap-2">
+            <Image src="/icons/Logo.svg" alt="Bot Logo" width={30} height={30} />
+            <p className="text-foreground-secondary">AlliA is typing{typingDots}</p>
+          </div>
+        </div>
+      )}
       <div ref={messagesEndRef}></div>
     </div>
   );
