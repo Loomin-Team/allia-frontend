@@ -184,7 +184,7 @@ export default function Home() {
 
           {generatedMessage && (
             <div className="flex flex-col justify-center gap-8 mt-10">
-              <Message message={generatedMessage} />
+              <Message message={generatedMessage} isLastMessage={true} />
               <Button
                 text={"Sign Up to continue the conversation"}
                 style={"PRIMARY"}

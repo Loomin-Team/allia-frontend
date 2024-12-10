@@ -1,28 +1,27 @@
-"use client";
 import React, { useState, FormEvent } from "react";
 import CircleButton from "@/app/components/ui/CircleButton";
 import Image from "next/image";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
+import { MessageModel } from "@/app/shared/models/MessageModel";
 import { useAuthStore } from "@/app/shared/stores/useAuthStore";
 
-interface ChatPromptProps {
+type ChatPromptProps = {
   chatId: string;
   isChatDetail: boolean;
-}
+  onTyping: (isTyping: boolean) => void;
+  onNewMessage?: (message: MessageModel) => void;
+};
 
-const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
+const ChatPrompt = ({ chatId, isChatDetail, onNewMessage, onTyping }: ChatPromptProps) => {
+  const [userMessage, setUserMessage] = useState("");
   const [selectedTone, setSelectedTone] = useState<string>("Professional");
-  const [selectedContentType, setSelectedContentType] =
-    useState<string>("Text");
+  const [selectedContentType, setSelectedContentType] = useState<string>("Text");
   const user = useAuthStore((state) => state.user);
   const userId = Number(user?.id);
-  const { promptRef, onSubmit, isGenerating } = useGenerateContent(
-    userId,
-    isChatDetail,
-    chatId
-  );
+  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId, isChatDetail, chatId);
 
   const tones = [
     { label: "Professional", value: "Professional" },
@@ -39,8 +38,41 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
     { label: "Meme", value: "Meme", icon: "/icons/Ghost.svg" },
   ];
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    await onSubmit(event, selectedTone, selectedContentType);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+   
+    if (!userMessage.trim()) return;
+
+
+    const userMessageObject: MessageModel = {
+      text: userMessage,
+      sender: "user",
+      name: user?.fullname || "Guest",
+      answer_type: selectedContentType as "Text" | "Post" | "Meme" | "Video",
+    };
+    onNewMessage(userMessageObject);
+
+    setUserMessage("");
+    onTyping(true);
+
+    const result = await onSubmit(e, selectedTone, selectedContentType);
+
+    console.log("result", result);
+    onTyping(false);
+    console.log("answer", result.response.reply.answer);
+    console.log("answer_type", result.response.reply.answer_type);
+
+    if (result.response) {
+      const botReplyMessage: MessageModel = {
+        text: result.response.reply.answer,
+        sender: "bot",
+        name: "AlliA",
+        answer_type: result.response.reply.answer_type,
+      };
+      onNewMessage(botReplyMessage);
+    }
   };
 
   return (
@@ -72,18 +104,11 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
                   key={type.value}
                   type="button"
                   className={`flex items-center justify-center w-full h-12 rounded-xl ${
-                    selectedContentType === type.value
-                      ? "bg-primary"
-                      : "bg-secondary"
+                    selectedContentType === type.value ? "bg-primary" : "bg-secondary"
                   }`}
                   onClick={() => setSelectedContentType(type.value)}
                 >
-                  <Image
-                    src={type.icon}
-                    alt={type.label}
-                    width={24}
-                    height={24}
-                  />
+                  <Image src={type.icon} alt={type.label} width={24} height={24} />
                 </button>
               ))}
             </div>
@@ -98,6 +123,8 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
               id="prompt"
               className="w-full bg-secondary py-2 px-6 border border-input-border rounded-lg min-h-[48px] h-[48px]"
               placeholder="Enter your prompt here..."
+              value={userMessage}
+              onChange={(e) => setUserMessage(e.target.value)}
             />
           </span>
 
@@ -105,14 +132,7 @@ const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
             <CircleButton
               type="submit"
               disabled={isGenerating}
-              image={
-                <Image
-                  src="/icons/Send.svg"
-                  width={20}
-                  height={20}
-                  alt="Send icon"
-                />
-              }
+              image={<Image src="/icons/Send.svg" width={20} height={20} alt="Send icon" />}
             />
           </div>
         </div>
