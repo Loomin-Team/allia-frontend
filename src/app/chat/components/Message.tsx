@@ -46,13 +46,13 @@ const Message = ({ message }: MessageProps) => {
     }
     if (message.answer_type === "Video") {
       return (
-        <a href={displayedText} target="_blank" rel="noopener noreferrer">
+        <Link href={displayedText} target="_blank" rel="noopener noreferrer">
           <video
             src={displayedText}
             controls
             className="rounded-lg max-w-full"
           />
-        </a>
+        </Link>
       );
     }
     return <p>{displayedText}</p>;
