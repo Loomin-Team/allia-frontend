@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import React, { useState, useEffect } from "react";
 
 type MessageProps = {
   message: {
@@ -35,15 +36,13 @@ const Message = ({ message }: MessageProps) => {
   const renderContent = () => {
     console.log("Gagaga", message.answer_type);
     if (message.answer_type === "Meme") {
-      return (
-        <a href={displayedText} target="_blank" rel="noopener noreferrer">
-          <img
-            src={displayedText}
-            alt={displayedText}
-            className="rounded-lg max-w-full"
-          />
-        </a>
-      );
+      <Link href={displayedText} target="_blank" rel="noopener noreferrer">
+        <img
+          src={displayedText}
+          alt={displayedText}
+          className="rounded-lg max-w-full"
+        />
+      </Link>;
     }
     if (message.answer_type === "Video") {
       return (
