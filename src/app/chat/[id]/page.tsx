@@ -84,7 +84,7 @@ const ChatPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
       <div className="h-full gap-6 rounded-lg flex flex-col p-4 lg:ml-64">
         <div className="flex-grow p-4 h-80 sidebar-scroll w-full overflow-y-auto space-y-3">
-          <ChatMessages chatId={chatId}  messages={messages} isTyping={isTyping} loading={false} error={error} />
+          <ChatMessages  messages={messages} isTyping={isTyping} loading={false} error={error} />
         </div>
         <ChatPrompt chatId={chatId} isChatDetail={isChatDetail} onNewMessage={handleNewMessage} onTyping={setIsTyping} />
       </div>

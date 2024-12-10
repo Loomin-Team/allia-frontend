@@ -4,7 +4,6 @@ import Message from "./Message";
 import { MessageModel } from "@/app/shared/models/MessageModel";
 
 type ChatMessagesProps = {
-  chatId: string;
 
   messages:  Array<MessageModel>;
 
@@ -13,7 +12,7 @@ type ChatMessagesProps = {
   loading: boolean;
 };
 
-const ChatMessages = ({ chatId, messages, isTyping, error, loading }: ChatMessagesProps) => {
+const ChatMessages = ({ messages, isTyping, error, loading }: ChatMessagesProps) => {
   
   const [typingDots, setTypingDots] = useState("");
 
