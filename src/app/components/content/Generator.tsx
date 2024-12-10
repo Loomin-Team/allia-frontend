@@ -1,79 +1,152 @@
-"use client";
-import React, {useState} from 'react'
+import React, { useState, useEffect } from "react";
 import Card from "@/app/components/content/Card";
 import Image from "next/image";
-import Input from "@/app/components/ui/Input";
-import Button from "@/app/components/ui/Button";
 import SelectInput from "@/app/components/ui/SelectInput";
+import CircleButton from "../ui/CircleButton";
 
-interface GeneratorProps {
-    isDemo?: boolean
-}
+type GeneratorProps = {
+  onSubmit: (
+    e: React.FormEvent<HTMLFormElement>,
+    toneOption: string | null,
+    contentType: string | null
+  ) => Promise<{ chatId?: string; error?: string; response?: any }>;
+  promptRef: React.RefObject<HTMLTextAreaElement | null>;
+  isGenerating: boolean;
+  onGeneratedMessage?: (message: {
+    text: string;
+    sender: "user" | "bot";
+    name: string;
+  }) => void;
+};
 
-const Generator: React.FC<GeneratorProps> = ({isDemo = false}) => {
-    const [selectedCard, setSelectedCard] = useState<string | null>(null);
+const Generator: React.FC<GeneratorProps> = ({
+  onSubmit,
+  promptRef,
+  isGenerating,
+  onGeneratedMessage,
+}) => {
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  const [selectedTone, setSelectedTone] = useState<string | null>(
+    "Professional"
+  );
+  const [botTyping, setBotTyping] = useState(false);
+  const [typingDots, setTypingDots] = useState("");
 
-    // Card data
-    const cards = [
-        {
-            title: "Text Content",
-            icon: <Image src={"/icons/Text.svg"} alt={"Text logo"} width={45} height={45} />,
-            isPremium: false,
-        },
-        {
-            title: "Short Video",
-            icon: <Image src={"/icons/Video.svg"} alt={"Video logo"} width={40} height={40} />,
-            isPremium: true,
-        },
-        {
-            title: "X Thread",
-            icon: <Image src={"/icons/X.svg"} alt={"X logo"} width={45} height={45} />,
-            isPremium: false,
-        },
-        {
-            title: "Meme",
-            icon: <Image src={"/icons/Ghost.svg"} alt={"Ghost logo"} width={45} height={50} />,
-            isPremium: true,
-        },
-    ];
+  useEffect(() => {
+    if (botTyping) {
+      const interval = setInterval(() => {
+        setTypingDots((prev) => (prev.length < 3 ? prev + "." : ""));
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [botTyping]);
 
-    const toneOptions = [
-        {value: "professional", label: "Professional"},
-        {value: "casual", label: "Casual"},
-        {value: "formal", label: "Formal"},
-        {value: "friendly", label: "Friendly"},
-        {value: "informative", label: "Informative"},
-        {value: "persuasive", label: "Persuasive"},
-    ]
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setBotTyping(true);
+    const result = await onSubmit(e, selectedTone, selectedCard);
 
-    return (
-        <div className={"mx-auto space-y-10"}>
-            <div
-                className={
-                    "grid grid-cols-1 sm:grid-cols-[repeat(2,_minmax(0,_max-content))] xl:grid-cols-[repeat(auto-fit,_minmax(0,_max-content))] justify-items-center justify-center gap-5"
-                }
-            >
-                {cards.map((card, index) => (
-                    <Card
-                        key={index}
-                        title={card.title}
-                        icon={card.icon}
-                        isPremium={card.isPremium}
-                        isSelected={selectedCard === card.title}
-                        onClick={() => setSelectedCard(card.title)} // Update selected card on click
-                    />
-                ))}
-            </div>
-            <div className={"space-y-10 max-w-generator mx-auto px-4 xl:mx-0 xl:px-0 xl:max-w-full"}>
-                <div
-                    className={"grid grid-cols-1 xl:grid-cols-3 gap-5"}>
-                    <Input label={"Domain or Industry"} placeholder={"Technology, Health, Finance..."}/>
-                    <Input label={"Topic or News"} placeholder={"Enter a topic or paste a news article"}/>
-                    <SelectInput options={toneOptions} label={"Tone"} placeholder={"Professional"}/>
-                </div>
-                <Button className={"w-full"} text={"Generate content"} style={"PRIMARY"}/>
-            </div>
+    setBotTyping(false);
+    if (result.chatId && result.response) {
+      if (onGeneratedMessage) {
+        onGeneratedMessage({
+          text: result.response.payload.answer,
+          sender: "bot",
+          name: "AlliA",
+        });
+      }
+    } else if (result.error) {
+      console.error(result.error);
+    }
+  };
+
+  const cards = [
+    { title: "Text Content", value: "Text", icon: "/icons/Text.svg" },
+    { title: "Social Media Post", value: "Post", icon: "/icons/Social.svg" },
+    { title: "Short Video", value: "Video", icon: "/icons/Video.svg" },
+    { title: "Meme", value: "Meme", icon: "/icons/Ghost.svg" },
+  ];
+
+  const toneOptions = [
+    { value: "Professional", label: "Professional" },
+    { value: "Casual", label: "Casual" },
+    { value: "Formal", label: "Formal" },
+    { value: "Friendly", label: "Friendly" },
+    { value: "Informative", label: "Informative" },
+    { value: "Persuasive", label: "Persuasive" },
+  ];
+
+  return (
+    <form onSubmit={handleSubmit} className="mx-auto space-y-10 px-4">
+      {/* Cards Section */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        {cards.map((card, index) => (
+          <Card
+            key={index}
+            title={card.title}
+            icon={
+              <Image src={card.icon} alt={card.title} width={45} height={45} />
+            }
+            isSelected={selectedCard === card.value}
+            onClick={() => setSelectedCard(card.value)}
+          />
+        ))}
+      </div>
+
+      {/* Inputs Section */}
+      <div className="flex flex-col md:flex-row gap-6 items-baseline max-w-generator mx-auto">
+        <span className="w-full">
+          <label className="text-foreground-secondary" htmlFor="prompt">
+            Prompt
+          </label>
+          <textarea
+            ref={promptRef}
+            id="prompt"
+            className="w-full bg-secondary py-2 px-6 border border-input-border rounded-lg min-h-[48px] h-[42px]"
+            placeholder="Enter your prompt here..."
+          />
+        </span>
+        <span className="flex gap-6 w-full md:max-w-[250px] items-end">
+          <SelectInput
+            label="Tone"
+            options={toneOptions}
+            placeholder="Select a tone"
+            onChange={(option) => setSelectedTone(option.value)}
+          />
+          <div>
+            <CircleButton
+              type="submit"
+              disabled={isGenerating}
+              image={
+                <Image
+                  src="/icons/Send.svg"
+                  width={20}
+                  height={20}
+                  alt="Send icon"
+                />
+              }
+            />
+          </div>
+        </span>
+      </div>
+
+      {/* Bot Typing Section */}
+      {botTyping && (
+        <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/icons/Logo.svg"
+              alt="Bot Logo"
+              width={30}
+              height={30}
+            />
+            <p className="text-foreground-secondary">
+              AlliA is typing{typingDots}
+            </p>
+          </div>
         </div>
-    )
-}
-export default Generator
+      )}
+    </form>
+  );
+};
+
+export default Generator;

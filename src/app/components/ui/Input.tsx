@@ -15,7 +15,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ type = "text", id, name, placeholder, autocomplete, label }, ref) => {
     return (
       <div className={"w-full"}>
-        <p className="text-foreground-secondary mb-2">{label ? label : placeholder}</p>
+        <p className="text-foreground-secondary mb-2">
+          {label ? label : placeholder}
+        </p>
         <input
           className="w-full bg-secondary py-2 px-6 border border-input-border rounded-full"
           type={type}

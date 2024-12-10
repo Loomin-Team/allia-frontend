@@ -6,11 +6,11 @@ export const login = async (
   email: string,
   password: string
 ): Promise<
-  | { status: "success"; message: string; payload: { token: string; user: { id: string; fullName: string; email: string } } }
+  | { status: "success"; message: string; payload: { token: string; user: { id: number; fullname: string; email: string } } }
   | { status: "error"; message: string }
 > => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/login`, {
+    const response = await axios.post(`${API_BASE_URL}/api/v1/auth/sign-in`, {
       email,
       password,
     });

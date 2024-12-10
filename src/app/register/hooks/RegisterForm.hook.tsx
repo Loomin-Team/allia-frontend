@@ -47,7 +47,7 @@ export const useRegisterForm = () => {
       if (res.status === "success") {
         router.push("/login");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred. Please try again later.");
     } finally {
       setIsRegistering(false);

@@ -40,7 +40,7 @@ export const useLoginForm = () => {
         });
         if (res.status === "success") {
           updateLogin(res.payload.token, res.payload.user);
-          router.push("/content");
+          router.push("/chat");
         }
       })
       .catch(() => {

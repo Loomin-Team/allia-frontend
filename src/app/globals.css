@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --background: #0A0A0A;
+  --background: #0a0a0a;
   --foreground: #ffffff;
-  --foreground-secondary: #979EAB;
+  --foreground-secondary: #979eab;
   --white: #ffffff;
   --black: #000000;
   --foreground-muted: #737373;
   --primary: #6b71fd;
-  --primary-muted: #20202E;
+  --primary-muted: #20202e;
   --secondary: #262626;
   --tertiary: #171717;
-  --tertiary-muted: #0F0F0F;
+  --tertiary-muted: #0f0f0f;
   --accent: #3dffb5;
   --warning: #f59e0b;
   --warning-muted: #3b2a0d;
@@ -21,7 +21,11 @@
   --danger-muted: #3b0d0d;
   --input-border: #484848;
 
-  --generator-max-width: 650px;
+  --generator-max-width: 910px;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -45,7 +49,8 @@ h1 {
   font-size: 30px;
   font-style: normal;
   font-weight: 500;
-  line-height: normal;}
+  line-height: normal;
+}
 
 h2 {
   color: var(--accent);
@@ -71,4 +76,17 @@ h4 {
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+}
+
+.sidebar-scroll {
+  overflow-y: scroll;
+}
+
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+.sidebar-scroll:hover {
+  scrollbar-color: #555 transparent;
 }

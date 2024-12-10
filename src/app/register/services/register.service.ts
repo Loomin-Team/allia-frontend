@@ -12,12 +12,24 @@ export const register = async ({
   password: string;
 }): Promise<{ status: string; message: string }> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/register`, {
+    const response = await axios.post(`${API_BASE_URL}/api/v1/auth/sign-up`, {
       fullname,
       email,
       password,
     });
-    return response.data;
+
+
+    if (response.status === 201) {
+      return {
+        status: "success",
+        message: "User registered successfully!",
+      };
+    }
+
+    return {
+      status: "error",
+      message: "Unexpected response from server.",
+    };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return {
