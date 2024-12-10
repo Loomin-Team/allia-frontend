@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 type MessageProps = {
-  message: { text: string; sender: "user" | "bot"; name: string };
+  message: {
+    text: string;
+    sender: "user" | "bot";
+    name: string;
+    answer_type: "Text" | "Post" | "Meme" | "Video";
+  };
 };
 
 const Message = ({ message }: MessageProps) => {
   const [displayedText, setDisplayedText] = useState(
-    message.sender === "bot" ? "" : message.text
+    message.sender === "bot" && message.answer_type === "Text"
+      ? ""
+      : message.text
   );
 
   useEffect(() => {
-    if (message.sender === "bot") {
+    if (message.sender === "bot" && message.answer_type === "Text") {
       let index = 0;
       const interval = setInterval(() => {
         if (index < message.text.length) {
@@ -23,7 +30,34 @@ const Message = ({ message }: MessageProps) => {
       }, 7);
       return () => clearInterval(interval);
     }
-  }, [message.text, message.sender]);
+  }, [message.text, message.sender, message.answer_type]);
+
+  const renderContent = () => {
+    console.log("Gagaga", message.answer_type);
+    if (message.answer_type === "Meme") {
+      return (
+        <a href={displayedText} target="_blank" rel="noopener noreferrer">
+          <img
+            src={displayedText}
+            alt={displayedText}
+            className="rounded-lg max-w-full"
+          />
+        </a>
+      );
+    }
+    if (message.answer_type === "Video") {
+      return (
+        <a href={displayedText} target="_blank" rel="noopener noreferrer">
+          <video
+            src={displayedText}
+            controls
+            className="rounded-lg max-w-full"
+          />
+        </a>
+      );
+    }
+    return <p>{displayedText}</p>;
+  };
 
   return (
     <div
@@ -59,7 +93,7 @@ const Message = ({ message }: MessageProps) => {
             <Image src="/icons/Logo.svg" alt="Logo" width={20} height={20} />
           </div>
           <div className="ml-4 text-white flex-1 break-words">
-            {displayedText}
+            {renderContent()}
           </div>
           <div className="flex gap-2 items-end justify-end">
             <Image

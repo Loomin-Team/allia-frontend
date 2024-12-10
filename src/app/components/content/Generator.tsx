@@ -16,6 +16,7 @@ type GeneratorProps = {
     text: string;
     sender: "user" | "bot";
     name: string;
+    answer_type: "Text" | "Post" | "Meme" | "Video";
   }) => void;
 };
 
@@ -42,6 +43,8 @@ const Generator: React.FC<GeneratorProps> = ({
   }, [botTyping]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("Selected Card:", selectedCard);
+
     setBotTyping(true);
     const result = await onSubmit(e, selectedTone, selectedCard);
 
@@ -52,6 +55,7 @@ const Generator: React.FC<GeneratorProps> = ({
           text: result.response.payload.answer,
           sender: "bot",
           name: "AlliA",
+          answer_type: result.response.payload.answer_type,
         });
       }
     } else if (result.error) {

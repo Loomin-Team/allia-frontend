@@ -34,25 +34,25 @@ export const generateContent = async (
 
 
 export const getMessagesByChatId = async (chatId: string): Promise<
-  | { status: "success"; messages: Array<{ text: string; sender: "user" | "bot"; name: string }> }
+  | {
+      status: "success";
+      messages: Array<{
+        text: string;
+        sender: "user" | "bot";
+        name: string;
+        answer_type: "Text" | "Meme" | "Video";
+      }>;
+    }
   | { status: "error"; message: string }
 > => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/v1/messages/${chatId}`);
-    console.log(response);
-
-    const messages = response.data.messages.flatMap((message: any) => [
-      {
-        text: message.entry,
-        sender: "user",
-        name: "User",
-      },
-      {
-        text: message.answer,
-        sender: "bot",
-        name: "Bot",
-      },
-    ]);
+    const messages = response.data.messages.map((message: any) => ({
+      text: message.text,
+      sender: message.sender,
+      name: message.sender === "bot" ? "Bot" : "User",
+      answer_type: message.answer_type,
+    }));
 
     return {
       status: "success",
@@ -65,6 +65,7 @@ export const getMessagesByChatId = async (chatId: string): Promise<
     };
   }
 };
+
 
 export const getChatsByUserId = async (userId: number): Promise<
   | { status: "success"; chats: Array<any> }
@@ -124,7 +125,6 @@ export const createDemoChat = async (
   | { status: "success"; message: string; payload: any }
   | { status: "error"; message: string }
 > => {
-  console.log(prompt, tone, content);
   try {
     const response = await axios.post(`${API_BASE_URL}/api/v1/chats/demo`, {
       entry: prompt,
@@ -132,12 +132,12 @@ export const createDemoChat = async (
       answer_type: content,
     });
 
-    console.log(response.data.chat);
+    console.log("Backend response (createDemoChat):", response.data);
+
     return {
       status: "success",
       message: "Demo chat created successfully.",
       payload: response.data.chat,
-
     };
   } catch (error: any) {
     console.error("Error from /chats/demo:", error.response?.data || error);

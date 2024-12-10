@@ -9,7 +9,12 @@ type ChatMessagesProps = {
 
 const ChatMessages = ({ chatId }: ChatMessagesProps) => {
   const [messages, setMessages] = useState<
-    Array<{ text: string; sender: "user" | "bot"; name: string }>
+    Array<{
+      text: string;
+      sender: "user" | "bot";
+      name: string;
+      answer_type: "Text" | "Post" | "Meme" | "Video";
+    }>
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +31,6 @@ const ChatMessages = ({ chatId }: ChatMessagesProps) => {
     const fetchMessages = async () => {
       setLoading(true);
       const response = await getMessagesByChatId(chatId);
-      console.log(response);
 
       if (response.status === "success") {
         setMessages(response.messages);
@@ -57,7 +61,6 @@ const ChatMessages = ({ chatId }: ChatMessagesProps) => {
       {messages.map((message, index) => (
         <Message key={index} message={message} />
       ))}
-
       <div ref={messagesEndRef}></div>
     </div>
   );

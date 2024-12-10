@@ -18,15 +18,18 @@ export default function Home() {
     text: string;
     sender: "user" | "bot";
     name: string;
+    answer_type: "Text" | "Post" | "Meme" | "Video";
   } | null>(null);
 
   const handleGeneratedMessage = (message: {
     text: string;
     sender: "user" | "bot";
     name: string;
+    answer_type: "Text" | "Post" | "Meme" | "Video";
   }) => {
     setGeneratedMessage(message);
   };
+
   const today = new Date();
   const todayDate = `${
     today.getMonth() + 1
@@ -232,7 +235,7 @@ export default function Home() {
               type={"$0"}
               description={
                 <p
-                    className={"flex flex-col text-xl text-foreground-secondary"}
+                  className={"flex flex-col text-xl text-foreground-secondary"}
                 >
                   <span>Text-only Generation</span>
                   <span>Basic trends access</span>
@@ -261,21 +264,21 @@ export default function Home() {
               buttonAction={() => onGoToLogin()}
             />
             <PricingCard
-                title={"Enterprise"}
-                type={"$299/m"}
-                description={
-                  <p
-                      className={"flex flex-col text-xl text-foreground-secondary"}
-                  >
-                    <span>Custom integrations</span>
-                    <span>Dedicated support</span>
-                    <span>Team collaboration</span>
-                    <span>API access</span>
-                    <span>White labelling</span>
-                  </p>
-                }
-                buttonText={"Upgrade Now"}
-                buttonAction={() => onGoToLogin()}
+              title={"Enterprise"}
+              type={"$299/m"}
+              description={
+                <p
+                  className={"flex flex-col text-xl text-foreground-secondary"}
+                >
+                  <span>Custom integrations</span>
+                  <span>Dedicated support</span>
+                  <span>Team collaboration</span>
+                  <span>API access</span>
+                  <span>White labelling</span>
+                </p>
+              }
+              buttonText={"Upgrade Now"}
+              buttonAction={() => onGoToLogin()}
             />
           </div>
         </section>
