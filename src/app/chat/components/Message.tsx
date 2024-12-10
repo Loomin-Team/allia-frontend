@@ -6,20 +6,24 @@ type MessageProps = {
 };
 
 const Message = ({ message }: MessageProps) => {
-  const [displayedText, setDisplayedText] = useState("");
+  const [displayedText, setDisplayedText] = useState(
+    message.sender === "bot" ? "" : message.text
+  );
 
   useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index < message.text.length) {
-        setDisplayedText((prev) => prev + message.text[index]);
-        index++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 15);
-    return () => clearInterval(interval);
-  }, [message.text]);
+    if (message.sender === "bot") {
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < message.text.length) {
+          setDisplayedText((prev) => prev + message.text[index]);
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 7);
+      return () => clearInterval(interval);
+    }
+  }, [message.text, message.sender]);
 
   return (
     <div
