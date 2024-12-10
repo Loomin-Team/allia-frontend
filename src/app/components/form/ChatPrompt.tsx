@@ -1,61 +1,122 @@
 "use client";
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import CircleButton from "@/app/components/ui/CircleButton";
 import Image from "next/image";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useGenerateContent } from "@/app/chat/hooks/useGenerateContent.hook";
+import { useAuthStore } from "@/app/shared/stores/useAuthStore";
+import { postReply } from "@/app/chat/services/generate-content.service";
 
-const ChatPrompt: React.FC = () => {
-  const [prompt, setPrompt] = useState<string>("");
+interface ChatPromptProps {
+  chatId: string;
+  isChatDetail: boolean;
+}
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (prompt.trim() === "") {
-      toast.warning("Please enter a prompt before submitting!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
+const ChatPrompt: React.FC<ChatPromptProps> = ({ chatId, isChatDetail }) => {
 
-    console.log("Do something:", prompt);
-    setPrompt("");
-  };
+  const [selectedTone, setSelectedTone] = useState<string>("Professional");
+  const [selectedContentType, setSelectedContentType] =
+    useState<string>("Text");
+  const user = useAuthStore((state) => state.user);
+  const userId = Number(user?.id);
+  const { promptRef, onSubmit, isGenerating } = useGenerateContent(userId, isChatDetail, chatId);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPrompt(event.target.value);
+
+  const tones = [
+    { label: "Professional", value: "Professional" },
+    { label: "Casual", value: "Casual" },
+    { label: "Formal", value: "Formal" },
+    { label: "Friendly", value: "Friendly" },
+    { label: "Persuasive", value: "Persuasive" },
+  ];
+
+  const contentTypes = [
+    { label: "Text", value: "Text", icon: "/icons/Text.svg" },
+    { label: "X Thread", value: "X Thread", icon: "/icons/X.svg" },
+    { label: "Video", value: "Video", icon: "/icons/Video.svg" },
+    { label: "Meme", value: "Meme", icon: "/icons/Ghost.svg" },
+  ];
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    
+    await onSubmit(event, selectedTone, selectedContentType);
+   
   };
 
   return (
-    <div>
+<div className="p-4 rounded-lg shadow-md">
       <ToastContainer />
-      <form className="flex space-x-2.5 w-full" onSubmit={handleSubmit}>
-        <Image src="/icons/Plus.svg" alt="Plus icon" width={20} height={20} />
-        <input
-          className="flex-grow bg-secondary py-2 px-6 border border-input-border rounded-full"
-          type="text"
-          id="prompt"
-          name="prompt"
-          placeholder="Enter your prompt"
-          value={prompt}
-          onChange={handleChange}
-        />
-        <CircleButton
-          type="submit"
-          image={
-            <Image
-              src="/icons/Send.svg"
-              width={20}
-              height={20}
-              alt="Send icon"
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* Tone Selector */}
+        <div className="flex space-x-4">
+          <span className="">
+            <p className="text-foreground-secondary mb-2">Tone</p>
+            <select
+              className="bg-secondary py-2 px-4 border border-input-border rounded-full h-12"
+              value={selectedTone}
+              onChange={(e) => setSelectedTone(e.target.value)}
+            >
+              {tones.map((tone) => (
+                <option key={tone.value} value={tone.value}>
+                  {tone.label}
+                </option>
+              ))}
+            </select>
+          </span>
+          {/* Content Type Selector */}
+          <span className="w-full">
+            <p className="text-foreground-secondary mb-2">Content Type</p>
+            <div className="flex items-center w-full space-x-4">
+              {contentTypes.map((type) => (
+                <button
+                  key={type.value}
+                  type="button"
+                  className={`flex items-center justify-center w-full h-12 rounded-xl ${
+                    selectedContentType === type.value
+                      ? "bg-primary"
+                      : "bg-secondary"
+                  }`}
+                  onClick={() => setSelectedContentType(type.value)}
+                >
+                  <Image
+                    src={type.icon}
+                    alt={type.label}
+                    width={24}
+                    height={24}
+                  />
+                </button>
+              ))}
+            </div>
+          </span>
+        </div>
+
+        {/* Prompt Input */}
+        <div className="flex gap-3 md:gap-6 items-start">
+          <span className="w-full">
+            <textarea
+              ref={promptRef}
+              id="prompt"
+              className="w-full bg-secondary py-2 px-6 border border-input-border rounded-lg min-h-[48px] h-[48px]"
+              placeholder="Enter your prompt here..."
             />
-          }
-        />
+          </span>
+
+          <div>
+            <CircleButton
+              type="submit"
+              disabled={isGenerating}
+              image={
+                <Image
+                  src="/icons/Send.svg"
+                  width={20}
+                  height={20}
+                  alt="Send icon"
+                />
+              }
+            />
+          </div>
+        </div>
       </form>
     </div>
   );

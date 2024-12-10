@@ -3,21 +3,90 @@
 @tailwind utilities;
 
 :root {
-  --background: #171717;
+  --background: #0a0a0a;
   --foreground: #ffffff;
+  --foreground-secondary: #979eab;
+  --white: #ffffff;
+  --black: #000000;
   --foreground-muted: #737373;
   --primary: #6b71fd;
+  --primary-muted: #20202e;
   --secondary: #262626;
+  --tertiary: #171717;
+  --tertiary-muted: #0f0f0f;
   --accent: #3dffb5;
   --warning: #f59e0b;
   --warning-muted: #3b2a0d;
   --danger: #ef4444;
   --danger-muted: #3b0d0d;
   --input-border: #484848;
+
+  --generator-max-width: 910px;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  color: var(--accent);
+  text-align: center;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.subheading {
+  color: var(--foreground-secondary);
+  text-align: center;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+h2 {
+  color: var(--accent);
+  text-align: center;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+h3 {
+  color: var(--accent);
+  text-align: center;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+h4 {
+  color: var(--accent);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.sidebar-scroll {
+  overflow-y: scroll;
+}
+
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+.sidebar-scroll:hover {
+  scrollbar-color: #555 transparent;
 }

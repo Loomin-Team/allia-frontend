@@ -6,7 +6,7 @@
 
 ---
 
-<p align="center"> Few lines describing your project.
+<p align="center"> Create compelling content on any topic in seconds. Powered by AI, designed for content creators.
     <br> 
 </p>
 
@@ -14,7 +14,7 @@
 
 - [Problem Statement](#problem_statement)
 - [Idea / Solution](#idea)
-- [Future Scope](#future_scope)
+- [How Does It Work?](#future_scope)
 - [Setting up a local environment](#getting_started)
 - [Project Structure](#project_structure)
 - [Technology Stack](#tech_stack)
@@ -22,30 +22,30 @@
 
 ## 🧐 Problem Statement <a name = "problem_statement"></a>
 
-It is useful to design and follow a specific format when writing a problem statement. While there are several options
-for doing this, the following is a simple and straightforward template often used in Business Analysis to maintain
-focus on defining the problem.
+Content creators face increasing pressure to produce high-quality, engaging content at a rapid pace across various platforms.
 
-- IDEAL: This section is used to describe the desired or “to be” state of the process or product. At large, this section
-  should illustrate what the expected environment would look like once the solution is implemented.
-- REALITY: This section is used to describe the current or “as is” state of the process or product.
-- CONSEQUENCES: This section is used to describe the impacts on the business if the problem is not fixed or improved upon.
-  This includes costs associated with loss of money, time, productivity, competitive advantage, and so forth.
+In 2023, 73% of marketers reported struggling to consistently create content that resonates with their target audience (Source: HubSpot, 2023)
 
-Following this format will result in a workable document that can be used to understand the problem and elicit
-requirements that will lead to a winning solution.
+The average time spent on content creation increased by 22% in 2024 compared to the previous year (Source: Content Marketing Institute, 2024)
 
 ## 💡 Idea / Solution <a name = "idea"></a>
 
-This section is used to describe potential solutions.
+<b>AlliA:</b> An AI-powered content generation platform that empowers creators to:
 
-Once the ideal, reality, and consequences sections have been
-completed, and understood, it becomes easier to provide a solution for solving the problem.
+Generate tailored content ideas based on trending topics and user preferences
+Adapt content to various formats, including text, images, and videos
+Collaborate with AI to refine and optimize content for maximum impact
+Seamlessly integrate with popular content platforms for easy distribution
 
-## 🚀 Future Scope <a name = "future_scope"></a>
 
-Write about what you could not develop during the course of the Hackathon; and about what your project can achieve
-in the future.
+## 🚀 How Does It Work? <a name = "future_scope"></a>
+
+- User selects content type, topic, tone, and target platform.
+- AlliA scans trending topics and user behavior data using APIs and web scraping 
+- Proprietary AI algorithms analyze data to generate content ideas and outlines 
+- Generative AI models create initial drafts in the desired format 
+- Users collaborate with AlliA to refine and optimize content 
+- Finalized content is exported and integrated with content platforms
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
@@ -71,7 +71,40 @@ pnpm install
 .
 └── src
     └── app
-        └── components
+    |   ├── chat
+    |   |   ├── components
+    |   |   ├── hooks
+    |   |   └── services
+    |   |
+    |   ├── components
+    |   |   ├── content
+    |   |   |   # Contains components related to the AI content generation.
+    |   |   ├── navigation
+    |   |   |   # Contains the navigation bar and footer components.
+    |   |   └── ui
+    |   |       # Contains the UI components.
+    |   |
+    |   ├── login
+    |   |   ├── components
+    |   |   ├── hooks
+    |   |   └── services
+    |   |
+    |   ├── register
+    |   |   ├── components
+    |   |   ├── hooks
+    |   |   └── services
+    |   |
+    |   └── shared
+    |   |   |  # Contains services, stores and models that are commonly shared among the app.
+    |   |   ├── layouts
+    |   |   |   # Contains the layout components.
+    |   |   ├── models
+    |   |   |   # Contains the models used in the application.
+    |   |   └── stores
+    |   |       # Stores the user token to use in the application.
+    |   |
+    └── page.tsx
+        # Includes the landing page of the application.
 ```
 
 ## ⛏️ Technology Stack <a name = "tech_stack"></a>
@@ -83,3 +116,4 @@ pnpm install
 
 - [@alanegd](https://github.com/alanegd)
 - [@avi-2-avi](https://github.com/avi-2-avi)
+- [@TMedalith](https://github.com/TMedalith)
